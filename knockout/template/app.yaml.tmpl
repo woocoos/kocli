@@ -1,0 +1,80 @@
+{{/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */}}
+{{- define "config" -}}
+namespace: default
+appName: {{ pkgName $.Package }}
+version: 0.0.1
+development: true
+log:
+  withTraceID: true
+  traceIDKey: "traceId"
+  cores:
+    - level: debug
+      outputPaths:
+        - stdout
+  rotate:
+    maxsize: 10
+    maxage: 10
+    maxbackups: 20
+    localtime: true
+
+# use open telemetry
+#otel:
+#  traceExporter: otlp
+#  otlp:
+#    endpoint: "127.0.0.1:4317"
+#    client:
+#      dialOption:
+#        - timeout: 5s
+authz:
+  watcherOptions:
+    options:
+      addr: "127.0.0.1:6379"
+      channel: "/casbin"
+  model: "etc/rbac_model.conf"
+
+web:
+  server:
+    addr: :8080
+  engine:
+    routerGroups:
+      - graphql:
+          basePath: "/graphql"
+          middlewares:
+#            - otel:
+            - accessLog:
+                exclude:
+                  - IntrospectionQuery
+            - recovery:
+            - errorHandle:
+            - jwt:
+                signingMethod: "HS256"
+                signingKey: "secret"
+                exclude:
+                  - "/graphql" #doc page
+            - tenant:
+                lookup: "header:X-Tenant-ID"
+                exclude:
+                  - "/graphql" #doc page
+            - graphql:
+                group: "/graphql"
+                withAuthorization: false
+                appCode: {{ pkgName $.Package }}
+            - gzip:
+
+store:
+    {{ pkgName $.Package }}:
+    driverName: mysql
+    dsn: "root:@tcp(localhost:3306)/{{ pkgName $.Package }}?parseTime=true&loc=Local"
+snowflake:
+  # 机器id
+  node: 1
+  # 时间戳起始时间 北京时间 2023-01-01 00:00:00
+  epoch: 1672531200000
+  # 机器id位数
+  nodeBits: 1
+  # 序列号位数
+  stepBits: 8
+entcache:
+  level: context
+#  ttl: 5m # level: db时有效
+{{- end -}}
