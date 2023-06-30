@@ -1,4 +1,4 @@
-package knockout
+package project
 
 import (
 	"github.com/stretchr/testify/require"

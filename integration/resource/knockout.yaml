@@ -1,0 +1,14 @@
+snowflake:
+  # 机器id
+  node: 1
+  # 时间戳起始时间 北京时间 2023-01-01 00:00:00
+  epoch: 1672531200000
+  # 机器id位数
+  nodeBits: 1
+  # 序列号位数
+  stepBits: 8
+
+store:
+  portal:
+    driverName: sqlite3
+    dsn: "file:portal?mode=memory&cache=shared&_fk=1"

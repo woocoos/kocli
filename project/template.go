@@ -1,4 +1,4 @@
-package knockout
+package project
 
 import (
 	"embed"
@@ -25,9 +25,8 @@ var (
 
 func initTemplates() {
 	tpkgs := make(map[string]string)
-	templates, tpkgs = gen.InitTemplates(templateDir, "import-knockout",
-		Extension{},
-		"template/*.tmpl")
+	templates = gen.ParseT("templates", templateDir, nil, "template/*.tmpl")
+	tpkgs = gen.InitTemplates(templates, "import-knockout", Extension{})
 	for k, v := range tpkgs {
 		importPkg[k] = v
 	}

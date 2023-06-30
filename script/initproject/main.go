@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/tsingsun/woocoo/cmd/woco/project"
-	"github.com/woocoos/kocli/knockout"
+	exprj "github.com/woocoos/kocli/project"
 	"log"
 )
 
@@ -22,7 +22,7 @@ func main() {
 		Modules: []string{"otel", "web"},
 	}
 
-	opts = append(opts, project.Extensions(knockout.New(knockout.WithTargetDir(cfg.Target))))
+	opts = append(opts, project.Extensions(exprj.New(exprj.WithTargetDir(cfg.Target))))
 	err := project.Generate(cfg, opts...)
 	if err != nil {
 		log.Panic(err)
