@@ -54,11 +54,11 @@ func (e *Extension) Hooks() []gen.Hook {
 func (e *Extension) initTemplates() {
 	initTemplates()
 	e.templates = append(e.templates,
-		gen.ParseT("template/app.yaml.tmpl", templateDir, ExtensionFuncs, "template/app.yaml.tmpl"),
-		gen.ParseT("template/codegen.tmpl", templateDir, ExtensionFuncs, "template/codegen.tmpl"),
-		gen.ParseT("template/makefile.tmpl", templateDir, ExtensionFuncs, "template/makefile.tmpl"),
-		gen.ParseT("template/test.tmpl", templateDir, ExtensionFuncs, "template/test.tmpl"),
-		gen.ParseT("template/main.tmpl", templateDir, ExtensionFuncs, "template/main.tmpl"),
-		gen.ParseT("template/gomod.tmpl", templateDir, ExtensionFuncs, "template/gomod.tmpl"),
+		gen.ParseT("template/app.yaml.tmpl", templateDir, ExtensionFuncs),
+		gen.ParseT("template/codegen.tmpl", templateDir, ExtensionFuncs),
+		gen.ParseT("template/makefile.tmpl", templateDir, ExtensionFuncs),
+		gen.ParseT("template/test.tmpl", templateDir, ExtensionFuncs),
+		gen.ParseT("template/main.tmpl", templateDir, ExtensionFuncs),
+		gen.ParseT("template/gomod.tmpl", templateDir, ExtensionFuncs),
 	)
 }

@@ -206,8 +206,8 @@ github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gt
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/tsingsun/woocoo v0.3.1-0.20230630113248-02e0cae1ce38 h1:VzhA3u9pkJYVf3sN+/eOjPOrfVn41sQFr3pIQBPgdjU=
 github.com/tsingsun/woocoo v0.3.1-0.20230630113248-02e0cae1ce38/go.mod h1:DmEOUvJzorOgEbE6uR3LWx2hw0UCLOEnE8o8ng4NiUI=
-github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230630113248-02e0cae1ce38 h1:ldU8xgtg1pjduM2XmPEP91ywKrFf0ROhbfma4r4txGI=
-github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230630113248-02e0cae1ce38/go.mod h1:b5shYeM3NZsH/EQ+BhGJWBOSOk5MZa3HnkYlzyPM+Ts=
+github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230701062025-a233a9ebf383 h1:Ff7qNpKQumICRwICgrf7Eg43Du1kiUsexQNutySMnYM=
+github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230701062025-a233a9ebf383/go.mod h1:b5shYeM3NZsH/EQ+BhGJWBOSOk5MZa3HnkYlzyPM+Ts=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.2.11 h1:BMaWp1Bb6fHwEtbplGBGJ498wD+LKlNSl25MjdZY4dU=
