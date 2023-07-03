@@ -166,6 +166,7 @@ type HelloWorld struct {
 func (HelloWorld) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Annotation{Table: "hello_world"},
+		entgql.QueryField(),
 		entgql.RelayConnection(),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
