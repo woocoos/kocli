@@ -71,10 +71,10 @@ func New(opt ...Option) *Extension {
 	ex := &Extension{
 		SkipRunGen: false,
 	}
+	ex.initTemplates()
 	for _, o := range opt {
 		o(ex)
 	}
-	ex.initTemplates()
 	return ex
 }
 
