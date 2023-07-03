@@ -26,6 +26,7 @@ func main() {
 	}
 	os.MkdirAll("./api/graphql", os.ModePerm)
 	opts := []entc.Option{
+		entc.Extensions(ex),
 		genx.GlobalID(),
 		genx.SimplePagination(),
 	}
@@ -49,6 +50,7 @@ import (
 	"github.com/99designs/gqlgen/codegen/config"
 	"github.com/99designs/gqlgen/plugin/modelgen"
 	"github.com/vektah/gqlparser/v2/ast"
+	"github.com/woocoos/entco/genx/gql"
 	"log"
 	"os"
 )
@@ -84,7 +86,9 @@ func main() {
 		FieldHook: constraintFieldHook,
 	}
 
-	err = api.Generate(cfg, api.ReplacePlugin(&p))
+	err = api.Generate(cfg, api.ReplacePlugin(&p),
+		api.AddPlugin(gql.NewResolverPlugin(gql.WithRelayNodeEx())),
+	)
 
 	if err != nil {
 		log.Print(err.Error())
@@ -95,12 +99,8 @@ func main() {
 {{ end }}
 
 {{ define "codegen/gqlgen/gqlgen.yaml" }}
-
- schema:
+schema:
   - api/graphql/ent.graphql
-  - api/graphql/types.graphql
-  - api/graphql/query.graphql
-  - api/graphql/mutation.graphql
 
 # Where should the generated server code go?
 exec:

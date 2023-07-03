@@ -204,10 +204,10 @@ github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gtY=
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/tsingsun/woocoo v0.3.1-0.20230630113248-02e0cae1ce38 h1:VzhA3u9pkJYVf3sN+/eOjPOrfVn41sQFr3pIQBPgdjU=
-github.com/tsingsun/woocoo v0.3.1-0.20230630113248-02e0cae1ce38/go.mod h1:DmEOUvJzorOgEbE6uR3LWx2hw0UCLOEnE8o8ng4NiUI=
-github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230701062025-a233a9ebf383 h1:Ff7qNpKQumICRwICgrf7Eg43Du1kiUsexQNutySMnYM=
-github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230701062025-a233a9ebf383/go.mod h1:b5shYeM3NZsH/EQ+BhGJWBOSOk5MZa3HnkYlzyPM+Ts=
+github.com/tsingsun/woocoo v0.3.1-0.20230703031137-259d6d0990b3 h1:o7bKyruyaTftNn8vJVBtqLSk8SGj2Y43e7T+C9vUsok=
+github.com/tsingsun/woocoo v0.3.1-0.20230703031137-259d6d0990b3/go.mod h1:DmEOUvJzorOgEbE6uR3LWx2hw0UCLOEnE8o8ng4NiUI=
+github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230703031137-259d6d0990b3 h1:a7dJ8lYoYEswHmLTaZm3W4zxPbpODgEw4UQRS01Od9U=
+github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230703031137-259d6d0990b3/go.mod h1:b5shYeM3NZsH/EQ+BhGJWBOSOk5MZa3HnkYlzyPM+Ts=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.2.11 h1:BMaWp1Bb6fHwEtbplGBGJ498wD+LKlNSl25MjdZY4dU=
@@ -223,8 +223,8 @@ github.com/vmihailenco/tagparser/v2 v2.0.0 h1:y09buUbR+b5aycVFQs/g70pqKVZNBmxwAh
 github.com/vmihailenco/tagparser/v2 v2.0.0/go.mod h1:Wri+At7QHww0WTrCBeu4J6bNtoV6mEfg5OIWRZA9qds=
 github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2 h1:mfLVlaAzYXZolhi0+NRZ86WWxzse7C+AmKUD1kBmEDI=
 github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2/go.mod h1:v6b9mWRshfwNfMFZeC/zWUyVDZpD7OLPlUPQHFADa2c=
-github.com/woocoos/entco v0.0.0-20230630012545-dc3768a0d107 h1:bJm5qv4pMJuqFPVtiAfxaIoA2aCBkj9HiZTZDRLjm7g=
-github.com/woocoos/entco v0.0.0-20230630012545-dc3768a0d107/go.mod h1:PEjmL1AB1pYLM9jY7f3ltYi5e8u52eC3Db8H1xFmayo=
+github.com/woocoos/entco v0.0.0-20230702090420-e7c45fe78ba6 h1:cS0LIUhfgEFPm87lIX3lGcLuwP9OvNgJp7H9YqDGlKI=
+github.com/woocoos/entco v0.0.0-20230702090420-e7c45fe78ba6/go.mod h1:PEjmL1AB1pYLM9jY7f3ltYi5e8u52eC3Db8H1xFmayo=
 github.com/woocoos/knockout v0.0.0-20230628070827-e588974b0bdf h1:YJfV/ezS/7BUuiGlFRB7QmCmR0Qng9rTzGgkceY5W2Y=
 github.com/woocoos/knockout v0.0.0-20230628070827-e588974b0bdf/go.mod h1:6t5894sB/8rTL5sA6RnnQoDHn+Xp4iZjs72j17q6uR0=
 github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 h1:bAn7/zixMGCfxrRTfdpNzjtPYqr8smhKouy9mxVdGPU=

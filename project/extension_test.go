@@ -3,6 +3,7 @@ package project
 import (
 	"github.com/stretchr/testify/require"
 	"github.com/tsingsun/woocoo/cmd/woco/project"
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -24,18 +25,20 @@ func Test_Generate(t *testing.T) {
 			args: args{
 				cfg: &project.Config{
 					Package: "github.com/tsingsun/knockouttest",
-					Header:  "//go:build ignore",
+					//Header:  "//go:build ignore",
 					Target:  kodir,
 					Modules: []string{"knockout"},
 				},
 				opts: []project.Option{
-					project.Extensions(New(WithTargetDir(kodir))),
+					project.Extensions(New(WithSkipRunGen(false), WithTargetDir(kodir))),
 				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			require.NoError(t, os.MkdirAll(tt.args.cfg.Target, os.ModePerm))
+			require.NoError(t, os.Chdir(tt.args.cfg.Target))
 			if err := project.Generate(tt.args.cfg, tt.args.opts...); (err != nil) != tt.wantErr {
 				t.Errorf("generate() error = %v, wantErr %v", err, tt.wantErr)
 			}

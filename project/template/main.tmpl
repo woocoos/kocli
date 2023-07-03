@@ -14,14 +14,16 @@ import(
     "github.com/tsingsun/woocoo/pkg/log"
     "github.com/tsingsun/woocoo/web"
     "github.com/woocoos/entco/ecx"
+    "github.com/woocoos/entco/gqlx"
     "github.com/woocoos/entco/ecx/oteldriver"
     "github.com/tsingsun/woocoo/pkg/log"
     "github.com/tsingsun/woocoo/rpc/grpcx"
     "{{ .Config.Package }}/cmd/internal/otel"
     "{{ .Config.Package }}/ent"
+    "{{ .Config.Package }}/api/graphql"
+
     _ "github.com/go-sql-driver/mysql"
-    // runtime remove when ent ready
-    // _ "{{ .Config.Package }}/ent/runtime"
+    _ "{{ .Config.Package }}/ent/runtime"
 )
 var (
     dbClient *ent.Client
@@ -71,16 +73,10 @@ func main(){
             identity.RegistryTenantIDMiddleware(),
         )
         // TODO below is example,you must initial graphql server after init project
-        gqlsrv := handler.New(nil)
-        //gqlSrv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{
-        //    Resolvers: &graphql.Resolver{
-        //        Client:   dbClient,
-        //        Resource: &resource.Service{Client: dbClient},
-        //    },
-        //}))
+        gqlSrv := handler.New(graphql.NewSchema(graphql.WithEntClient(dbClient)))
 
         // entcache
-        if cnf.Root.String("entcache.level") == "context" {
+        if cnf.Root().String("entcache.level") == "context" {
             gqlSrv.AroundResponses(gqlx.ContextCache())
         }
         // pagination by page and limit
@@ -102,31 +98,5 @@ func main(){
         return grpcSrv
     }
 {{ end }}
-
-{{ end }}
-
-{{ define "cmd/internal/otel/otel" }}
-{{ with $.Header }}{{ . }}{{ end }}
-package otel
-
-import (
-	"github.com/tsingsun/woocoo/contrib/telemetry"
-	"github.com/tsingsun/woocoo/pkg/conf"
-	"go.opentelemetry.io/contrib/propagators/b3"
-)
-
-// Apply 尝试注册otel,如果配置中有otel配置,则注册.并返回关闭函数
-func Apply(cnf *conf.AppConfiguration) func() {
-	if cnf.IsSet("otel") {
-		otelCnf := cnf.Sub("otel")
-		otelcfg := telemetry.NewConfig(otelCnf,
-			telemetry.WithPropagator(b3.New()),
-		)
-		return func() {
-			otelcfg.Shutdown()
-		}
-	}
-	return func() {}
-}
 
 {{ end }}

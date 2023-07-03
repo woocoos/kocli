@@ -31,9 +31,10 @@ var InitCmd = &cli.Command{
 			return err
 		}
 		cfg := &project.Config{
-			Package: c.String("package"),
-			Target:  fd,
-			Modules: []string{"otel", "web"},
+			Package:     c.String("package"),
+			Target:      fd,
+			Modules:     []string{"otel", "web"},
+			SkipModTidy: true,
 		}
 		var opts []project.Option
 		opts = append(opts, project.Extensions(New(WithTargetDir(cfg.Target))))
