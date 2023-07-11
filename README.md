@@ -22,6 +22,9 @@ or go get kocli and go run the script
 go run github.com/woocoos/kocli/script/initproject/main.go
 ```
 
+in codegen directory, scripts use `//go:build ignore` to keep ent generate run correctly, 
+it can ignore build failure when your code is not ready and has some errors.
+
 ### application resource and action
 
 generate app resource info from ent schema, before run this you need `go mod tidy` first.

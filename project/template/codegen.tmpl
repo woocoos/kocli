@@ -1,5 +1,6 @@
 {{/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */}}
 {{ define "codegen/entgen/entc" }}
+//go:build ignore
 {{ with $.Header }}{{ . }}{{ end }}
 package main
 
@@ -42,6 +43,7 @@ func main() {
 {{ end }}
 
 {{ define "codegen/gqlgen/gqlgen" }}
+//go:build ignore
 {{ with $.Header }}{{ . }}{{ end }}
 package main
 
