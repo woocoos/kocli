@@ -28,6 +28,17 @@ func WithSkipRunGen(skip bool) Option {
 	}
 }
 
+func WithFrontend() Option {
+	return func(e *Extension) {
+		t := gen.NewTemplate("frontend")
+		t.Delims("[[", "]]")
+		e.templates = append(e.templates,
+			gen.MustParse(t.Funcs(ExtensionFuncs).ParseFS(templateDir,
+				"template/web/*.tmpl", "template/web/*/*/*.tmpl")),
+		)
+	}
+}
+
 type Extension struct {
 	TargetDir  string
 	SkipRunGen bool
@@ -68,9 +79,7 @@ func (e *Extension) GeneratedHooks() []gen.GeneratedHook {
 }
 
 func New(opt ...Option) *Extension {
-	ex := &Extension{
-		SkipRunGen: false,
-	}
+	ex := &Extension{}
 	ex.initTemplates()
 	for _, o := range opt {
 		o(ex)

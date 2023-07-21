@@ -10,7 +10,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/stretchr/testify v1.8.3
 	github.com/tsingsun/woocoo v0.3.1-0.20230703031137-259d6d0990b3
-	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230703031137-259d6d0990b3
+	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230721074819-dc379a88fbf5
 	github.com/urfave/cli/v2 v2.25.5
 	github.com/woocoos/entco v0.0.0-20230702090420-e7c45fe78ba6
 	github.com/woocoos/knockout v0.0.0-20230628070827-e588974b0bdf

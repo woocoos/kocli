@@ -1,0 +1,97 @@
+[[- define "web/.editorconfig" -]]
+# http://editorconfig.org
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab
+[[- end -]]
+
+[[- define "web/.gitignore" -]]
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+*.swp
+*.dia~
+.idea
+.run
+.vscode
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# local env files
+.env*.local
+
+# tmp
+.ice
+
+# cache
+.eslintcache
+.stylelintcache
+[[- end -]]
+
+[[- define "web/.eslintignore" -]]
+# dirs
+build/
+tests/
+demo/
+.ice/
+
+# node test coverage
+coverage/
+
+# files
+**/*-min.js
+**/*.min.js
+[[- end -]]
+
+[[- define "web/.eslintrc.cjs" -]]
+const {getESLintConfig} = require('@applint/spec');
+
+module.exports = getESLintConfig(
+  'react-ts', {
+    rules: {
+      "react-hooks/exhaustive-deps": 0
+    }
+  }
+);
+
+[[- end -]]
+
+[[- define "web/.stylelintignore" -]]
+# ignore dir
+build/
+tests/
+demo/
+
+# node test coverage
+coverage/
+[[- end -]]
+
+[[- define "web/.stylelintrc.cjs" -]]
+const { getStylelintConfig } = require('@applint/spec');
+
+module.exports = getStylelintConfig('react');
+[[- end -]]

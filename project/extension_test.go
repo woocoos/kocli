@@ -25,12 +25,16 @@ func Test_Generate(t *testing.T) {
 			args: args{
 				cfg: &project.Config{
 					Package: "github.com/tsingsun/knockouttest",
-					//Header:  "//go:build ignore",
+					Header:  "//go:build ignore",
 					Target:  kodir,
 					Modules: []string{"knockout"},
 				},
 				opts: []project.Option{
-					project.Extensions(New(WithSkipRunGen(false), WithTargetDir(kodir))),
+					project.Extensions(New(
+						WithSkipRunGen(true),
+						WithTargetDir(kodir),
+						WithFrontend(),
+					)),
 				},
 			},
 		},

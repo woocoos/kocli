@@ -22,6 +22,11 @@ var InitCmd = &cli.Command{
 			Usage:   "the target directory of the generated code",
 			Value:   ".",
 		},
+		&cli.BoolFlag{
+			Name:    "frontend",
+			Aliases: []string{"f"},
+			Usage:   "generate frontend code",
+		},
 	},
 	Action: func(c *cli.Context) (err error) {
 		dir := c.String("target")
@@ -36,8 +41,15 @@ var InitCmd = &cli.Command{
 			Modules:     []string{"otel", "web"},
 			SkipModTidy: true,
 		}
+		exts := []Option{
+			WithTargetDir(cfg.Target),
+		}
+		if c.Bool("frontend") {
+			exts = append(exts, WithFrontend())
+		}
+
 		var opts []project.Option
-		opts = append(opts, project.Extensions(New(WithTargetDir(cfg.Target))))
+		opts = append(opts, project.Extensions(New(exts...)))
 		return project.Generate(cfg, opts...)
 	},
 }
