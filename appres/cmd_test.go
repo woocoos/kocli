@@ -72,3 +72,41 @@ func (s *testSuite) TestGenQqlAction() {
 	s.Equal(appaction.KindGraphql, all[1].Kind)
 
 }
+
+func (s *testSuite) TestGenAppMenu() {
+	s.client.AppAction.Delete().ExecX(context.Background())
+	cfg := Config{
+		KnockoutConfig: "../integration/resource/knockout.yaml",
+		MenuConfig:     "../integration/resource/web/src/components/layout/menu.json",
+		AppCode:        "resource",
+		PortalClient:   s.client,
+	}
+	menuUpd := 0
+	s.Run("init", func() {
+		err := GenAppMenu(cfg)
+		s.Require().NoError(err)
+		menus, err := s.client.AppMenu.Query().All(context.Background())
+		s.Require().NoError(err)
+		s.Len(menus, 6)
+		menuUpd = menus[0].ID
+		actions, err := s.client.AppAction.Query().Where().All(context.Background())
+		s.Require().NoError(err)
+		s.Len(actions, 4)
+	})
+	upd, err := s.client.AppMenu.Get(context.Background(), menuUpd)
+	s.Require().NoError(err)
+	upd.Update().SetIcon("changed").SetUpdatedBy(0).SaveX(context.Background())
+	s.Run("update", func() {
+		err := GenAppMenu(cfg)
+		s.Require().NoError(err)
+		menus, err := s.client.AppMenu.Query().All(context.Background())
+		s.Require().NoError(err)
+		s.Len(menus, 6)
+		actions, err := s.client.AppAction.Query().Where().All(context.Background())
+		s.Require().NoError(err)
+		s.Len(actions, 4)
+
+		s.NotEqual(menus[0].Icon, "changed")
+		s.Equal(menus[0].Icon, "fa")
+	})
+}

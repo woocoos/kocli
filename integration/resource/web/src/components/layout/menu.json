@@ -1,0 +1,30 @@
+[
+  {
+    "name": "resource",
+    "icon": "fa",
+    "children": [
+      {
+        "name": "消息类型",
+        "path": "/resource/messageType"
+      },
+      {
+        "name": "微应用详情",
+        "path": "/ucenter/appDetail"
+      },
+      {
+        "name": "外部页面",
+        "path": "https://github.com/"
+      },
+      {
+        "name": "子级 1",
+        "icon": "fa2",
+        "children": [
+          {
+            "name": "普通页面",
+            "path": "/subs/normal"
+          }
+        ]
+      }
+    ]
+  }
+]

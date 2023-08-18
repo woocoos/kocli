@@ -1,0 +1,33 @@
+[[ define "web/src/pages/index.tsx" ]]
+import { PageContainer, ProCard, useToken } from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
+
+
+export default () => {
+  const { token } = useToken(),
+    { t } = useTranslation();
+
+  return (
+    <PageContainer
+      header={{
+        title: t('worktable'),
+        style: { background: token.colorBgContainer },
+      }}
+    >
+        hello
+    </PageContainer>
+  );
+};
+
+[[ end ]]
+
+[[ define "web/src/pages/layout.tsx" ]]
+import Layout from '@/components/Layout';
+import LayoutStark from '@/components/Layout/stark';
+import { isInIcestark } from '@ice/stark-app';
+
+export default () => {
+  return isInIcestark() ? <LayoutStark /> : <Layout />
+}
+
+[[ end ]]
