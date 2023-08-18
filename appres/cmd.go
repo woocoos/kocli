@@ -76,7 +76,7 @@ var Cmd = &cli.Command{
 				&cli.PathFlag{
 					Name:    "data",
 					Usage:   "the menu data path",
-					Value:   "web/src/components/Layout/menu.json",
+					Value:   "web/src/components/layout/menu.json",
 					Aliases: []string{"d"},
 				},
 			},

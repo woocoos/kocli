@@ -77,7 +77,7 @@ func (s *testSuite) TestGenAppMenu() {
 	s.client.AppAction.Delete().ExecX(context.Background())
 	cfg := Config{
 		KnockoutConfig: "../integration/resource/knockout.yaml",
-		MenuConfig:     "../integration/resource/web/src/components/Layout/menu.json",
+		MenuConfig:     "../integration/resource/web/src/components/layout/menu.json",
 		AppCode:        "resource",
 		PortalClient:   s.client,
 	}
