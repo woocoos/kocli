@@ -168,8 +168,8 @@ export default () => {
 
 [[ end ]]
 
-[[ define "web/src/components/Layout/menu.json" ]]
-[[ $pkg := pkgName .Package ]]
+[[- define "web/src/components/Layout/menu.json" -]]
+[[- $pkg := pkgName .Package -]]
 [
   {
     "name": "menu",
@@ -186,4 +186,4 @@ export default () => {
     ]
   }
 ]
-[[ end ]]
+[[- end -]]
