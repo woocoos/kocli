@@ -2,6 +2,7 @@ package appres
 
 import (
 	"context"
+	"encoding/json"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
 	"entgo.io/ent/entc/load"
@@ -16,6 +17,7 @@ import (
 	"github.com/woocoos/knockout/ent"
 	"github.com/woocoos/knockout/ent/app"
 	"github.com/woocoos/knockout/ent/appaction"
+	"github.com/woocoos/knockout/ent/appmenu"
 	"github.com/woocoos/knockout/ent/appres"
 	"log"
 	"os"
@@ -37,9 +39,11 @@ type Config struct {
 	KnockoutConfig string
 	EntConfig      string
 	GQLConfig      string
+	MenuConfig     string
 	Dialect        string
 	DSN            string
 	AppCode        string
+	AppID          int
 	PortalClient   *ent.Client
 }
 
@@ -206,7 +210,8 @@ func GenGqlActions(cfg Config) error {
 		if strings.HasPrefix(field.Name, "__") {
 			continue
 		}
-		inst, err := cfg.PortalClient.AppAction.Query().Where(appaction.AppID(appid), appaction.Name(field.Name)).First(context.Background())
+		inst, err := cfg.PortalClient.AppAction.Query().Where(appaction.AppID(appid), appaction.Name(field.Name)).
+			First(context.Background())
 		if err != nil && !ent.IsNotFound(err) {
 			return err
 		}
@@ -219,7 +224,8 @@ func GenGqlActions(cfg Config) error {
 	}
 	if gcfg.Schema.Mutation != nil {
 		for _, field := range gcfg.Schema.Mutation.Fields {
-			inst, err := cfg.PortalClient.AppAction.Query().Where(appaction.AppID(appid), appaction.Name(field.Name)).First(context.Background())
+			inst, err := cfg.PortalClient.AppAction.Query().Where(appaction.AppID(appid), appaction.Name(field.Name)).
+				First(context.Background())
 			if err != nil && !ent.IsNotFound(err) {
 				return err
 			}
@@ -242,4 +248,113 @@ func GenGqlActions(cfg Config) error {
 		log.Print("done")
 	}
 	return err
+}
+
+type MenuData struct {
+	Name     string      `json:"name"`
+	Icon     string      `json:"icon"`
+	Path     string      `json:"path"`
+	Redirect string      `json:"action"`
+	Children []*MenuData `json:"children"`
+}
+
+func GenAppMenu(cfg Config) error {
+	_, err := initApp(&cfg)
+	if err != nil {
+		return err
+	}
+	var menus []*MenuData
+	data, err := os.ReadFile(cfg.MenuConfig)
+	if err != nil {
+		return err
+	}
+	if err = json.Unmarshal(data, &menus); err != nil {
+		return err
+	}
+	var (
+		appmenus   []*ent.AppMenuCreate
+		appactions []*ent.AppActionCreate
+	)
+	cfg.AppID = cfg.PortalClient.App.Query().Where(app.Code(cfg.AppCode)).OnlyX(context.Background()).ID
+
+	oriMenus, err := cfg.PortalClient.AppMenu.Query().Where(appmenu.HasAppWith(app.Code(cfg.AppCode))).
+		All(context.Background())
+	if err != nil {
+		return err
+	}
+	oriActions, err := cfg.PortalClient.AppAction.Query().Where(appaction.HasAppWith(app.Code(cfg.AppCode))).
+		All(context.Background())
+	if err != nil {
+		return err
+	}
+
+	for _, menu := range menus {
+		sms, sas, err := appMenu(cfg, menu, 0, oriMenus, oriActions)
+		if err != nil {
+			return err
+		}
+		appmenus = append(appmenus, sms...)
+		appactions = append(appactions, sas...)
+	}
+	err = ecx.WithTx(context.Background(), func(ctx context.Context) (ecx.Transactor, error) {
+		return cfg.PortalClient.Tx(ctx)
+	}, func(itx ecx.Transactor) error {
+		tx := itx.(*ent.Tx)
+		err := tx.AppAction.CreateBulk(appactions...).OnConflict().UpdateNewValues().
+			Exec(context.Background())
+		if err != nil {
+			return err
+		}
+		err = tx.AppMenu.CreateBulk(appmenus...).OnConflict().UpdateNewValues().Exec(context.Background())
+		return err
+	})
+	if err == nil {
+		log.Print("done")
+	}
+	return err
+}
+
+func appMenu(cfg Config, item *MenuData, parent int, oriMenu []*ent.AppMenu, oriActions []*ent.AppAction) (
+	menus []*ent.AppMenuCreate, actions []*ent.AppActionCreate, err error) {
+	amc := cfg.PortalClient.AppMenu.Create()
+	id := int(snowflake.New().Int64())
+	// 找到原始菜单的ID
+	for _, menu := range oriMenu {
+		if item.Name == menu.Name {
+			id = menu.ID
+			break
+		}
+	}
+	amc.SetID(id).SetName(item.Name).SetIcon(item.Icon).SetCreatedBy(0).SetAppID(cfg.AppID).SetParentID(parent)
+	if item.Path != "" {
+		amc.SetRoute(item.Path)
+		var found bool
+		for _, action := range oriActions {
+			if item.Path == action.Name {
+				amc.SetActionID(action.ID)
+				found = true
+				break
+			}
+		}
+		if !found {
+			acid := int(snowflake.New().Int64())
+			amc.SetActionID(acid)
+			actions = append(actions,
+				cfg.PortalClient.AppAction.Create().SetID(acid).SetAppID(cfg.AppID).SetCreatedBy(0).SetName(item.Path).
+					SetKind(appaction.KindRoute).SetMethod(appaction.MethodRead))
+		}
+		amc.SetKind(appmenu.KindMenu)
+	} else {
+		amc.SetKind(appmenu.KindDir)
+	}
+	menus = append(menus, amc)
+	for _, child := range item.Children {
+		nms, nas, err := appMenu(cfg, child, id, oriMenu, oriActions)
+		if err != nil {
+			return nil, nil, err
+		}
+		menus = append(menus, nms...)
+		actions = append(actions, nas...)
+	}
+	return
 }

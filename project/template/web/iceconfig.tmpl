@@ -1,32 +1,41 @@
 [[- define "web/ice.config.mts" -]]
-import {defineConfig} from '@ice/app';
+import { defineConfig } from '@ice/app';
 import request from '@ice/plugin-request';
 import store from '@ice/plugin-store';
 import auth from '@ice/plugin-auth';
-import icestark from '@ice/plugin-icestark';
 import antd from '@ice/plugin-antd';
 import jsxPlus from '@ice/plugin-jsx-plus';
+import icestark from '@ice/plugin-icestark';
+import urqlPlugin from '@knockout-js/ice-urql';
 
 // The project config, see https://v3.ice.work/docs/guide/basic/config
 const minify = process.env.NODE_ENV === 'production' ? 'swc' : false;
+
 export default defineConfig(() => ({
   ssg: false,
+  ssr: false,
   minify,
+  codeSplitting: 'page',
+  compileDependencies: process.env.NODE_ENV === 'development' ? [/@urql\/core/] : true,
+  routes: {
+    ignoreFiles: [
+      '**/components/**',   // 添加此配置忽略components被解析成路由组件
+    ],
+  },
   plugins: [
-    icestark({type: 'child'}),
+    icestark({ type: 'child' }),
+    urqlPlugin(),
     request(),
-    store({resetPageState: true}),
+    store(),
     auth(),
     jsxPlus(),
-    antd({importStyle: false})
+    antd({
+      importStyle: false,
+    }),
   ],
-  compileDependencies: false,
-  devPublicPath: process.env.ICE_DEV_PUBLIC_PATH ?? '/',
-  publicPath: process.env.ICE_BUILD_PUBLIC_PATH ?? '/',
-  routes: {
-    // 忽略 src/pages 下所有 components 目录
-    ignoreFiles: ['**/components/**'],
-  },
+  proxy: {},
 }));
+
+
 
 [[- end -]]

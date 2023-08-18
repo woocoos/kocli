@@ -13,7 +13,7 @@ require (
 	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230721074819-dc379a88fbf5
 	github.com/urfave/cli/v2 v2.25.5
 	github.com/woocoos/entco v0.0.0-20230702090420-e7c45fe78ba6
-	github.com/woocoos/knockout v0.0.0-20230628070827-e588974b0bdf
+	github.com/woocoos/knockout v0.0.0-20230817102841-c8fa49e5c4d7
 )
 
 require (

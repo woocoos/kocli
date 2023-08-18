@@ -25,8 +25,9 @@ go run github.com/woocoos/kocli/script/initproject/main.go
 in codegen directory, scripts use `//go:build ignore` to keep ent generate run correctly, 
 it can ignore build failure when your code is not ready and has some errors.
 
-### application resource and action
+### application data
 
+#### resource
 generate app resource info from ent schema, before run this you need `go mod tidy` first.
 
 ```bash
@@ -36,6 +37,7 @@ generate app resource info from ent schema, before run this you need `go mod tid
 kocli res ent -a resource -e ./ent/schema -f knockout.yaml
 ```
 
+#### action
 generate app action info from graphql file.
 
 ```bash
@@ -43,3 +45,33 @@ generate app action info from graphql file.
 # -g 99design/gqlgen config file path
 kocli res gql-action -a resource -g gqlgen.yaml -f knockout.yaml
 ```
+
+#### menu
+generate app menu info from web menu data.
+
+```bash
+# -a and -f same as above
+# -d web menu data path
+kocli res web-menu -a resource -d ./web/menu.json -f knockout.yaml
+```
+
+menu data example:
+
+```json
+[
+  {
+    "name": "home",
+    "icon": "home",
+    "children": [
+      {
+        "name": "dashboard",
+        "icon": "dashboard",
+        "path": "/dashboard"
+      }
+    ]
+  }
+]
+```
+
+1. `path` will be auto generator an action.
+2. `children` will be generated as a menu dir.

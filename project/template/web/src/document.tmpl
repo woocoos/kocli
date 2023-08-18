@@ -1,0 +1,45 @@
+[[- define "web/src/document.tsx" -]]
+import { Meta, Title, Links, Main, Scripts } from 'ice';
+
+export default function Document() {
+  return (
+    <html>
+    <head>
+      <meta charSet="utf-8" />
+      <meta name="description" content="ice.js 3 antd pro scaffold" />
+      <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+      <Meta />
+      <Title />
+      <Links />
+    </head>
+    <body>
+    <Main />
+    <Scripts />
+    </body>
+    </html>
+  );
+}
+
+[[- end -]]
+
+[[- define "web/src/global.css" -]]
+body {
+  margin: 0;
+}
+
+.ant-pro .ant-pro-layout .ant-pro-layout-container .ant-pro-layout-content {
+  /* background: #f0f2f5; */
+  min-height: calc(100vh - 56px - 124px);
+}
+
+.ant-pro-page-container-children-container {
+  padding-block: 16px;
+  padding-inline: 16px;
+}
+
+.ant-pro-page-container .ant-pro-page-container-warp-page-header {
+  padding-inline-start: 16px;
+  padding-inline-end: 16px;
+}
+[[ end]]

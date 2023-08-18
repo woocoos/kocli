@@ -67,5 +67,27 @@ var Cmd = &cli.Command{
 				})
 			},
 		},
+		{
+			Name:  "menu",
+			Usage: "gen app menu from web project.",
+			Flags: []cli.Flag{
+				cnf,
+				appcode,
+				&cli.PathFlag{
+					Name:    "data",
+					Usage:   "the menu data path",
+					Value:   "web/src/components/Layout/menu.json",
+					Aliases: []string{"d"},
+				},
+			},
+			Action: func(ctx *cli.Context) error {
+				return GenAppMenu(Config{
+					KnockoutConfig: ctx.String("config"),
+					EntConfig:      ctx.String("schema"),
+					MenuConfig:     ctx.String("data"),
+					AppCode:        ctx.String("app"),
+				})
+			},
+		},
 	},
 }
