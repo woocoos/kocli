@@ -200,6 +200,10 @@ func GenGqlActions(cfg Config) error {
 		return err
 	}
 
+	if (gcfg.Schema.Query == nil || len(gcfg.Schema.Query.Fields) == 0) &&
+		(gcfg.Schema.Mutation == nil || len(gcfg.Schema.Mutation.Fields) == 0) {
+		return fmt.Errorf("no query or mutation found,plz check chdir")
+	}
 	appid := cfg.PortalClient.App.Query().Where(app.Code(cfg.AppCode)).OnlyX(context.Background()).ID
 	builder := make([]*ent.AppActionCreate, 0)
 	for _, field := range gcfg.Schema.Query.Fields {

@@ -8,6 +8,7 @@ import (
 	"github.com/woocoos/knockout/ent/app"
 	"github.com/woocoos/knockout/ent/appaction"
 	"github.com/woocoos/knockout/ent/migrate"
+	"os"
 	"testing"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -54,15 +55,23 @@ func (s *testSuite) TestGenEntSchemaRes() {
 }
 
 func (s *testSuite) TestGenQqlAction() {
+	pwd, err := os.Getwd()
+	s.Require().NoError(err)
+	defer func() {
+		_ = os.Chdir(pwd)
+	}()
+	if err := os.Chdir(`../integration/resource`); err != nil {
+		s.Require().NoError(err)
+	}
 	cfg := Config{
-		KnockoutConfig: "../integration/resource/knockout.yaml",
-		GQLConfig:      "../integration/resource/gqlgen.yml",
+		KnockoutConfig: "knockout.yaml",
+		GQLConfig:      "gqlgen.yml",
 		AppCode:        "resource",
 		PortalClient:   s.client,
 	}
-	err := GenGqlActions(cfg)
+	err = GenGqlActions(cfg)
 	s.Require().NoError(err)
-	all, err := s.client.AppAction.Query().All(context.Background())
+	all, err := s.client.AppAction.Query().Where(appaction.KindIn(appaction.KindGraphql)).All(context.Background())
 	s.Require().NoError(err)
 	s.Equal("node", all[0].Name)
 	s.Equal(appaction.MethodRead, all[0].Method)
@@ -70,7 +79,6 @@ func (s *testSuite) TestGenQqlAction() {
 	s.Equal("nodes", all[1].Name)
 	s.Equal(appaction.MethodRead, all[1].Method)
 	s.Equal(appaction.KindGraphql, all[1].Kind)
-
 }
 
 func (s *testSuite) TestGenAppMenu() {

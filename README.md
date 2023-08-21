@@ -28,7 +28,10 @@ it can ignore build failure when your code is not ready and has some errors.
 ### application data
 
 #### resource
+
 generate app resource info from ent schema, before run this you need `go mod tidy` first.
+
+> note: a knockout project usually uses a relative path based on project root,so you need to run this command in your project root directory. 
 
 ```bash
 # -a app code,need match your AppCode stored in Knockout application
