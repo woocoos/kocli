@@ -94,7 +94,7 @@ export default createModel({
   },
   effects: () => ({
     /**
-     * 登录
+     * Login
      * @param payload
      */
     async loginAfter(payload: LoginRes) {
@@ -119,15 +119,14 @@ export default createModel({
       }
     },
     /**
-     * 退出
-     * @param isHistory
+     * Logout
      */
     async logout() {
       this.updateToken('');
       this.updateUser(null);
     },
     /**
-     * 更新用户信息
+     * Update user info
      * @param user
      */
     async saveUser(user: User) {
@@ -138,8 +137,8 @@ export default createModel({
       });
     },
     /**
-     * 更新租户id
-     * @param key
+     * Update tenant id
+     * @param tenantId
      */
     async saveTenantId(tenantId: string) {
       this.updateTenantId(tenantId);

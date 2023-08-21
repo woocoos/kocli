@@ -34,7 +34,7 @@ func WithFrontend() Option {
 		t.Delims("[[", "]]")
 		e.templates = append(e.templates,
 			gen.MustParse(t.Funcs(ExtensionFuncs).ParseFS(templateDir,
-				"template/web/*.tmpl", "template/web/*/*/*.tmpl")),
+				"template/web/*.tmpl", "template/web/**/*.tmpl", "template/web/**/**/*.tmpl")),
 		)
 	}
 }

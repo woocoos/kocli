@@ -1,4 +1,5 @@
-[[- define ""web/src/app.ts"" ]]
+[[/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */]]
+[[- define "web/src/app.ts" -]]
 import { defineAppConfig, defineDataLoader } from 'ice';
 import { defineAuthConfig } from '@ice/plugin-auth/esm/types';
 import { defineStoreConfig } from '@ice/plugin-store/esm/types';
@@ -7,11 +8,20 @@ import { defineUrqlConfig, requestInterceptor } from "@knockout-js/ice-urql/type
 import store from '@/store';
 import '@/assets/styles/index.css';
 import { getItem, removeItem, setItem } from '@/pkg/localStore';
-import { browserLanguage, goLogin } from './util';
+import { browserLanguage } from './util';
+import { goLogin } from './services/auth';
 import jwtDcode, { JwtPayload } from 'jwt-decode';
 import { defineChildConfig } from '@ice/plugin-icestark/types';
 import { isInIcestark } from '@ice/stark-app';
 import { User, userPermissions } from '@knockout-js/api';
+
+const APPCODE = process.env.ICE_APP_CODE || '[[ pkgName $.Package]]',
+  ADMIN_URL = process.env.ICE_ADMIN_URL || '',
+  UCENTER_URL = process.env.ICE_UCENTER_URL || '',
+  LOGIN_URL = process.env.ICE_LOGIN_URL || '',
+  REFRESH_URL = process.env.ICE_REFRESH_URL || '',
+  // SPM
+  SIGN_CID = process.env.ICE_SIGN_CID || 'sign_cid=knockout';
 
 export const icestark = defineChildConfig(() => ({
   mount: () => {
@@ -24,8 +34,8 @@ export const icestark = defineChildConfig(() => ({
 
 if (process.env.ICE_CORE_MODE === 'development') {
   // 无登录项目增加前端缓存内容 方便开发和展示
-  setItem('token', process.env.ICE_TOKEN)
-  setItem('tenantId', process.env.ICE_TENANT_ID)
+  setItem('token', process.env.ICE_DEV_TOKEN)
+  setItem('tenantId', process.env.ICE_DEV_TENANT_ID)
   setItem('user', {
     id: 1,
     displayName: 'admin',
@@ -43,7 +53,7 @@ export default defineAppConfig(() => ({
 // 用来做初始化数据
 export const dataLoader = defineDataLoader(async () => {
   if (!isInIcestark()) {
-    const sign = 'sign_cid=adminx'
+    const sign = SIGN_CID
     if (document.cookie.indexOf(sign) === -1) {
       removeItem('token')
       removeItem('refreshToken')
@@ -57,7 +67,6 @@ export const dataLoader = defineDataLoader(async () => {
     compactMode = getItem<string>('compactMode'),
     tenantId = getItem<string>('tenantId'),
     user = getItem<User>('user');
-
   if (token) {
     // 增加jwt判断token过期的处理
     try {
@@ -89,17 +98,16 @@ export const dataLoader = defineDataLoader(async () => {
   };
 });
 
-
 // urql
 export const urqlConfig = defineUrqlConfig([
   {
     instanceName: 'default',
-    url: '/api-msgsrv/graphql/query',
+    url: ADMIN_URL,
     exchangeOpt: {
       authOpts: {
         store: {
           getState: () => {
-            const { token, tenantId, refreshToken } = store.getModelState('user')
+            const {token, tenantId, refreshToken} = store.getModelState('user')
             return {
               token, tenantId, refreshToken
             }
@@ -108,25 +116,24 @@ export const urqlConfig = defineUrqlConfig([
             store.dispatch.user.updateToken(newToken)
           }
         },
-        login: process.env.ICE_LOGIN_URL,
-        refreshApi: "/api-auth/login/refresh-token"
+        login: LOGIN_URL,
+        refreshApi: REFRESH_URL,
       }
     }
   },
   {
     instanceName: 'ucenter',
-    url: '/api-adminx/graphql/query',
+    url: UCENTER_URL,
   },
 ])
 
-
 // 权限
 export const authConfig = defineAuthConfig(async (appData) => {
-  const { user } = appData,
+  const {user, app} = appData,
     initialAuth = {};
   // 判断路由权限
   if (user.token) {
-    const result = await userPermissions(process.env.ICE_APP_CODE as string, {
+    const result = await userPermissions(APPCODE, {
       Authorization: `Bearer ${user.token}`,
       'X-Tenant-ID': user.tenantId,
     });
@@ -148,7 +155,7 @@ export const authConfig = defineAuthConfig(async (appData) => {
 
 // store数据项
 export const storeConfig = defineStoreConfig(async (appData) => {
-  const { user, app } = appData;
+  const {user, app} = appData;
   return {
     initialStates: {
       user,
@@ -157,7 +164,6 @@ export const storeConfig = defineStoreConfig(async (appData) => {
   };
 });
 
-
 // 请求配置
 export const requestConfig = defineRequestConfig(() => {
   return [
@@ -165,13 +171,13 @@ export const requestConfig = defineRequestConfig(() => {
       interceptors: requestInterceptor({
         store: {
           getState: () => {
-            const { token, tenantId } = store.getModelState('user')
+            const {token, tenantId} = store.getModelState('user')
             return {
               token, tenantId
             }
           },
         },
-        login: process.env.ICE_LOGIN_URL,
+        login: LOGIN_URL,
       })
     },
   ];

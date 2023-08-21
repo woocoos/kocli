@@ -10,8 +10,7 @@ import { MenuDataItem, useToken } from '@ant-design/pro-components';
 import { monitorKeyChange } from '@/pkg/localStore';
 import { getFilesRaw } from '@/services/files';
 import { Layout, useLeavePrompt } from '@knockout-js/layout';
-import { goLogin } from '@/util';
-import { logout } from '@/services/auth';
+import { goLogin,logout } from '@/services/auth';
 import defaultAvatar from '@/assets/images/default-avatar.png';
 import { createFromIconfontCN } from '@ant-design/icons';
 
@@ -117,7 +116,7 @@ export default () => {
           colorMenuBackground: appState.darkMode ? 'linear-gradient(#141414, #000000 28%)' : token.colorBgContainer,
         },
       },
-      title: '[[ pkgName $.Package]]',
+      title: 'workflow',
       [process.env.ICE_CORE_MODE === 'development' ? 'menu' : '']: {
         request: () => {
           const list: MenuDataItem[] = [];
@@ -180,7 +179,7 @@ export default () => {
         "path": "/[[ $pkg ]]/sub1"
       },
       {
-        "name": "静默消息",
+        "name": "sub2",
         "path": "/[[ $pkg ]]/sub2"
       }
     ]

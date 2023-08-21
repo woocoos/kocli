@@ -1,4 +1,4 @@
-[[ define "web/src/services/file.ts" ]]
+[[- define "web/src/services/file.ts" -]]
 import { request } from 'ice';
 
 type Files = {
@@ -8,7 +8,7 @@ type Files = {
   createdAt: string
 }
 
-const baseURL = '/api-files'
+const baseURL = process.env.ICE_FILE_BASEURL
 
 /**
  * 上传
@@ -31,6 +31,7 @@ export async function updateFiles(data: {
   return null
 }
 
+
 /**
  * 获取数据
  * @param fileId
@@ -50,9 +51,10 @@ export async function getFiles(fileId: string) {
  * @returns
  */
 export async function delFiles(fileId: string) {
-  const result = await request.delete(`${baseURL}/files/${fileId}`)
-  return result;
+  return await request.delete(`${baseURL}/files/${fileId}`);
 }
+
+
 
 /**
  * 获取数据
@@ -74,10 +76,13 @@ export async function getFilesRaw(fileId: string, type?: 'url') {
   return null;
 }
 
+
+
 /**
  * 帮助数组快速获取数据
  * @param arr
  * @param key
+ * @param defaultValue
  * @returns
  */
 export async function formatArrayFilesRaw<T>(arr: T[], key: string, defaultValue?: any) {
@@ -90,4 +95,4 @@ export async function formatArrayFilesRaw<T>(arr: T[], key: string, defaultValue
     return item
   }));
 }
-[[ end ]]
+[[- end -]]

@@ -1,0 +1,18 @@
+[[- define "/web/src/util/index.ts" -]]
+
+export const browserLanguage = () => {
+  let locale = '';
+  switch (navigator.language) {
+    case 'zh':
+      locale = 'zh-CN';
+      break;
+    case 'en':
+      locale = 'en-US';
+      break;
+    default:
+      locale = 'zh-CN';
+      break;
+  }
+  return locale;
+};
+[[- end -]]
