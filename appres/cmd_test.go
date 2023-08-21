@@ -20,7 +20,7 @@ type testSuite struct {
 
 // set up
 func (s *testSuite) SetupSuite() {
-	client, err := ent.Open("sqlite3", "file:portal?mode=memory&cache=shared&_fk=1")
+	client, err := ent.Open("sqlite3", "file:portal?mode=memory&cache=shared&_fk=1", ent.Debug())
 	s.Require().NoError(err)
 	s.client = client
 	err = client.Schema.Create(context.Background(),

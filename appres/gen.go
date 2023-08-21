@@ -21,7 +21,6 @@ import (
 	"github.com/woocoos/knockout/ent/appres"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -191,11 +190,8 @@ func GenGqlActions(cfg Config) error {
 	if err != nil {
 		return err
 	}
-	if err := os.Chdir(filepath.Dir(cfg.GQLConfig)); err != nil {
-		return err
-	}
 
-	gcfg, err := config.LoadConfig(filepath.Base(cfg.GQLConfig))
+	gcfg, err := config.LoadConfig(cfg.GQLConfig)
 	if err != nil {
 		return err
 	}
