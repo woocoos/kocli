@@ -98,20 +98,55 @@ module.exports = getStylelintConfig('react');
 [[- end -]]
 
 [[- define "web/.env" -]]
-ICE_APP_CODE=workflow
-ICE_ADMIN_URL=/workflow/graphql/query
-ICE_AUTH_BASEURL=/ucenter
-ICE_FILE_BASEURL=/files
-ICE_LOGIN_URL=${ICE_AUTH_BASEURL}/login
-ICE_LOGOUT_URL=${ICE_AUTH_BASEURL}/logout
-ICE_REFRESH_URL=${ICE_AUTH_BASEURL}/login/refresh-token
-ICE_UCENTER_URL=/ucenter/graphql/query
-ICE_SIGN_CID=knockout
+# 应用appCode
+ICE_APP_CODE=[[ pkgName $.Package]]
+
+# token
+ICE_DEV_TOKEN=
+
+# tenant_id
+ICE_DEV_TID=
+
+# 登陆地址
+ICE_LOGIN_URL=/login
+
+# ice proxy target
+ICE_PROXY_ADMINX=http://127.0.0.1:8080/
+ICE_PROXY_FILES=http://127.0.0.1:10071/
+ICE_PROXY_AUTH=http://127.0.0.1:10070/
+ICE_PROXY_MAIN=http://127.0.0.1:10072/
+
+# api前缀
+ICE_API_ADMINX_PREFIX=/api-adminx
+ICE_API_AUTH_PREFIX=/api-auth
+ICE_API_FILES_PREFIX=/api-files
+ICE_API_MAIN_PREFIX=/api-main
+
+# gql api完整地址
+ICE_API_MAIN=${ICE_API_MAIN_PREFIX}/graphql/query
+ICE_API_ADMINX=${ICE_API_ADMINX_PREFIX}/graphql/query
+
+# 微前端开发适合测试使用
+# 可配置值：http://localhost:xxx/
+ICE_DEV_PUBLIC_PATH=/
+
+# 微前端打包时候使用配置与具体部署位置有关
+ICE_BUILD_PUBLIC_PATH=/
 
 [[- end -]]
 
 [[- define "web/.env.local" -]]
+
+PORT=3002
+
 # mock user token and tenantId
-ICE_DEV_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzIwMTM1ODExLCJpYXQiOjE2ODQxMzU4MTEsImp0aSI6InRva2VuOjE6YTU0YjdiNzMtYjFlNS00YmE0LWFlZDktMjMwMmVhMDgwOTUwIn0.Roi6QokXVLSOUGziglXPP8rBFwhkfEhf7mRSXEL-Wu0
-ICE_DEV_TENANT_ID=1
+ICE_DEV_TOKEN=
+ICE_DEV_TENANT_ID=
+
+# mock
+ICE_PROXY_ADMINX=http://127.0.0.1:3002//mock-api-adminx/
+ICE_PROXY_FILES=http://127.0.0.1:3002/mock-api-files/
+ICE_PROXY_AUTH=http://127.0.0.1:3002/mock-api-auth/
+ICE_PROXY_MAIN=http://127.0.0.1:3002/mock-api-main/
+
 [[- end -]]

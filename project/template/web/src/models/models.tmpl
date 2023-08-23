@@ -1,6 +1,6 @@
 [[ define "web/src/models/app.ts" ]]
 import { createModel } from 'ice';
-import { setItem } from '@/pkg/localStore';
+import { setItem } from '@/pkg/local-store';
 import { LocaleType } from '@knockout-js/layout';
 
 type ModelState = {
@@ -32,7 +32,7 @@ export default createModel({
 [[ define "web/src/models/user.ts" ]]
 import { createModel } from 'ice';
 import { LoginRes } from '@/services/auth';
-import { setItem, removeItem, getItem } from '@/pkg/localStore';
+import { setItem, removeItem, getItem } from '@/pkg/local-store';
 import { User } from '@knockout-js/api';
 
 type UserState = {

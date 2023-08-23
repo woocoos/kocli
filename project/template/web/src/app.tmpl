@@ -7,21 +7,22 @@ import { defineRequestConfig } from '@ice/plugin-request/esm/types';
 import { defineUrqlConfig, requestInterceptor } from "@knockout-js/ice-urql/types";
 import store from '@/store';
 import '@/assets/styles/index.css';
-import { getItem, removeItem, setItem } from '@/pkg/localStore';
+import { getItem, removeItem, setItem } from '@/pkg/local-store';
 import { browserLanguage } from './util';
-import { goLogin } from './services/auth';
 import jwtDcode, { JwtPayload } from 'jwt-decode';
 import { defineChildConfig } from '@ice/plugin-icestark/types';
 import { isInIcestark } from '@ice/stark-app';
 import { User, userPermissions } from '@knockout-js/api';
+import { logout, parseSpm } from './services/auth';
 
-const APPCODE = process.env.ICE_APP_CODE || '[[ pkgName $.Package]]',
-  ADMIN_URL = process.env.ICE_ADMIN_URL || '',
-  UCENTER_URL = process.env.ICE_UCENTER_URL || '',
-  LOGIN_URL = process.env.ICE_LOGIN_URL || '',
-  REFRESH_URL = process.env.ICE_REFRESH_URL || '',
-  // SPM
-  SIGN_CID = process.env.ICE_SIGN_CID || 'sign_cid=knockout';
+const ICE_API_MAIN = process.env.ICE_API_MAIN ?? '',
+  ICE_API_ADMINX = process.env.ICE_API_ADMINX ?? '',
+  NODE_ENV = process.env.NODE_ENV ?? '',
+  ICE_DEV_TOKEN = process.env.ICE_DEV_TOKEN ?? '',
+  ICE_DEV_TID = process.env.ICE_DEV_TID ?? '',
+  ICE_APP_CODE = process.env.ICE_APP_CODE ?? '',
+  ICE_LOGIN_URL = process.env.ICE_LOGIN_URL ?? '',
+  ICE_API_AUTH_PREFIX = process.env.ICE_API_AUTH_PREFIX ?? '';
 
 export const icestark = defineChildConfig(() => ({
   mount: () => {
@@ -32,10 +33,10 @@ export const icestark = defineChildConfig(() => ({
   },
 }));
 
-if (process.env.ICE_CORE_MODE === 'development') {
+if (NODE_ENV === 'development') {
   // 无登录项目增加前端缓存内容 方便开发和展示
-  setItem('token', process.env.ICE_DEV_TOKEN)
-  setItem('tenantId', process.env.ICE_DEV_TENANT_ID)
+  setItem('token', ICE_DEV_TOKEN)
+  setItem('tenantId', ICE_DEV_TID)
   setItem('user', {
     id: 1,
     displayName: 'admin',
@@ -53,20 +54,22 @@ export default defineAppConfig(() => ({
 // 用来做初始化数据
 export const dataLoader = defineDataLoader(async () => {
   if (!isInIcestark()) {
-    const sign = SIGN_CID
-    if (document.cookie.indexOf(sign) === -1) {
+    const signCid = `sign_cid=${ICE_APP_CODE}`
+    if (document.cookie.indexOf(signCid) === -1) {
       removeItem('token')
       removeItem('refreshToken')
     }
-    document.cookie = sign
+    document.cookie = signCid
   }
+  const spmData = await parseSpm();
   let locale = getItem<string>('locale'),
-    token = getItem<string>('token'),
-    refreshToken = getItem<string>('refreshToken'),
+    token = spmData.token ?? getItem<string>('token'),
+    refreshToken = spmData.refreshToken ?? getItem<string>('refreshToken'),
+    tenantId = spmData.tenantId ?? getItem<string>('tenantId'),
     darkMode = getItem<string>('darkMode'),
     compactMode = getItem<string>('compactMode'),
-    tenantId = getItem<string>('tenantId'),
-    user = getItem<User>('user');
+    user = spmData.user ?? getItem<User>('user');
+
   if (token) {
     // 增加jwt判断token过期的处理
     try {
@@ -98,16 +101,17 @@ export const dataLoader = defineDataLoader(async () => {
   };
 });
 
+
 // urql
 export const urqlConfig = defineUrqlConfig([
   {
     instanceName: 'default',
-    url: ADMIN_URL,
+    url: ICE_API_MAIN,
     exchangeOpt: {
       authOpts: {
         store: {
           getState: () => {
-            const {token, tenantId, refreshToken} = store.getModelState('user')
+            const { token, tenantId, refreshToken } = store.getModelState('user')
             return {
               token, tenantId, refreshToken
             }
@@ -116,24 +120,25 @@ export const urqlConfig = defineUrqlConfig([
             store.dispatch.user.updateToken(newToken)
           }
         },
-        login: LOGIN_URL,
-        refreshApi: REFRESH_URL,
+        login: ICE_LOGIN_URL,
+        refreshApi: `${ICE_API_AUTH_PREFIX}/login/refresh-token`
       }
     }
   },
   {
     instanceName: 'ucenter',
-    url: UCENTER_URL,
+    url: ICE_API_ADMINX,
   },
 ])
 
+
 // 权限
 export const authConfig = defineAuthConfig(async (appData) => {
-  const {user, app} = appData,
+  const { user } = appData,
     initialAuth = {};
   // 判断路由权限
   if (user.token) {
-    const result = await userPermissions(APPCODE, {
+    const result = await userPermissions(ICE_APP_CODE, {
       Authorization: `Bearer ${user.token}`,
       'X-Tenant-ID': user.tenantId,
     });
@@ -145,8 +150,7 @@ export const authConfig = defineAuthConfig(async (appData) => {
       });
     }
   } else {
-    store.dispatch.user.logout();
-    goLogin();
+    await logout();
   }
   return {
     initialAuth,
@@ -155,7 +159,7 @@ export const authConfig = defineAuthConfig(async (appData) => {
 
 // store数据项
 export const storeConfig = defineStoreConfig(async (appData) => {
-  const {user, app} = appData;
+  const { user, app } = appData;
   return {
     initialStates: {
       user,
@@ -164,24 +168,22 @@ export const storeConfig = defineStoreConfig(async (appData) => {
   };
 });
 
+
 // 请求配置
-export const requestConfig = defineRequestConfig(() => {
-  return [
-    {
-      interceptors: requestInterceptor({
-        store: {
-          getState: () => {
-            const {token, tenantId} = store.getModelState('user')
-            return {
-              token, tenantId
-            }
-          },
-        },
-        login: LOGIN_URL,
-      })
+export const requestConfig = defineRequestConfig({
+  interceptors: requestInterceptor({
+    store: {
+      getState: () => {
+        const { token, tenantId } = store.getModelState('user')
+        return {
+          token, tenantId
+        }
+      },
     },
-  ];
+    login: ICE_LOGIN_URL,
+  })
 });
+
 
 [[ end ]]
 
