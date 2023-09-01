@@ -40,19 +40,45 @@ func WithFrontend() Option {
 			gen.MustParse(t.Funcs(ExtensionFuncs).ParseFS(templateDir,
 				"template/web/*.tmpl", "template/web/**/*.tmpl", "template/web/**/**/*.tmpl")),
 		)
+		staticFiles := map[string]string{
+			"template/web/public/favicon.ico": "web/public/favicon.ico",
+		}
+		for k, v := range staticFiles {
+			e.staticFiles[k] = v
+		}
 	}
 }
 
 type Extension struct {
 	TargetDir  string
+	// SkipRunGen option for debug and testing, when run entgen and gqlgen in testing will failure
 	SkipRunGen bool
 	hooks      []gen.Hook
 	templates  []*gen.Template
+	staticFiles map[string]string
+}
+
+func (e *Extension) writeStatic() error {
+	var assets gen.Assets
+	for key, tar := range e.staticFiles {
+		fp := filepath.Join(e.TargetDir, tar)
+		assets.AddDir(filepath.Dir(fp))
+		bs, err := templateDir.ReadFile(key)
+		if err != nil {
+			return err
+		}
+		assets.Add(fp, bs)
+	}
+	return assets.Write()
 }
 
 func (e *Extension) GeneratedHooks() []gen.GeneratedHook {
 	return []gen.GeneratedHook{
 		func(ex gen.Extension) error {
+			if err := e.writeStatic(); err != nil {
+				return err
+			}
+
 			graph := ex.(*project.Graph)
 			if e.SkipRunGen {
 				return nil
@@ -100,7 +126,9 @@ func (e *Extension) GeneratedHooks() []gen.GeneratedHook {
 }
 
 func New(opt ...Option) *Extension {
-	ex := &Extension{}
+	ex := &Extension{
+		staticFiles: make(map[string]string),
+	}
 	ex.initTemplates()
 	for _, o := range opt {
 		o(ex)

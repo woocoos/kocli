@@ -1,0 +1,11 @@
+{{- /* gotype: github.com/woocoos/kocli/lowcode/graph.Node */ -}}
+{{- define "page" -}}
+    {{ $props:= .Page.ContainerSchema.NodeSchema.Props}}
+    <PageContainer
+      header: {{"{{"}}
+        title: {{ $title:= ($props.Prop "title")}}{{ if $title}} {{ $title}} {{ else }} t('{{.Page.GetID}}.title') {{ end }}
+      {{ "}}"}}
+    >
+
+    </PageContainer>
+{{- end -}}

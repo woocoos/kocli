@@ -1,0 +1,71 @@
+{{- /* gotype: github.com/woocoos/kocli/lowcode/schema.NodeSchema*/ -}}
+{{- define "component" -}}
+    <{{ .ComponentName }}
+    {{- $props:= .Props.PropsMap}}
+    {{- range $key,$value := $props}}
+        {{- $type := compositeValueType $value }}
+        {{- $needBrace := propsNeedBrace $value }}
+        {{ $key}} ={{ if $needBrace }}{{"{"}}{{ end }}
+        {{- if eq $type "String" }}
+            {{- $value.Value | quote }}
+        {{- else }}
+            {{- template "composite-value-nostring" $value }}
+        {{- end }}
+        {{- if $needBrace }}{{"}"}}{{end}}
+    {{- end }}
+    {{- if len .Children }}
+        >
+        {{- range .Children }}
+            {{- if isComponent .Value }}
+                {{ template "component" .Value }}
+            {{ else }}
+                {{ .Value }}
+            {{- end }}
+        {{- end}}
+        </{{ .ComponentName }}>
+    {{- else }}
+        />
+    {{- end -}}
+{{- end -}}
+
+{{- /* gotype: github.com/woocoos/kocli/lowcode/schema.CompositeValueMap*/ -}}
+{{- define "composite-map" -}}
+    {{- $len := len . }}
+    {{ range $key,$value:=. }}
+        {{- $len = sub $len 1 }}
+        {{- $key }}: {{ template "composite-value" $value }}{{ if gt $len 0 }},{{ end }}
+    {{ end }}
+{{- end -}}
+
+{{- /* gotype: github.com/woocoos/kocli/lowcode/schema.CompositeValue*/ -}}
+{{- define "composite-value" -}}
+    {{- $type := compositeValueType . }}
+    {{- template "composite-value-nostring" . }}
+    {{- if eq $type "String" -}}
+        {{- .Value | squote }}
+    {{- end }}
+{{- end -}}
+
+{{- define "composite-value-nostring" -}}
+    {{- $type := compositeValueType . }}
+    {{- if eq $type "CompositeValueSlice" -}}
+        [
+        {{- $last := sub (len .Value) 1}}
+        {{ range $i,$v := .Value }}{{ template "composite-value" $v }}{{ if lt $i $last}},{{ end }}{{ end }}
+        ]
+    {{- else if eq $type "CompositeValue" }}
+        {{- template "composite-value" .Value -}}
+    {{- else if eq $type "CompositeValueMap" -}}
+        {
+        {{- template "composite-map" .Value -}}
+        }
+    {{- else if eq $type "Boolean" -}}
+        {{- .Value }}
+    {{- else if eq $type "Number" -}}
+        {{- .Value }}
+    {{- else if eq $type "JSSlot" -}}
+        {{- template "jsslot" .Value -}}
+    {{ else if eq $type "Component" }}
+        {{ template "component" .Value }}
+    {{- end }}
+{{- end -}}

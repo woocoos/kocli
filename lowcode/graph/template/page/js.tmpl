@@ -1,0 +1,21 @@
+{{- /* gotype: github.com/woocoos/kocli/lowcode/schema.JSSlot*/ -}}
+{{- define "jsslot" -}}
+    {{- if len .Params }}
+        ({{ joinSlice .Params ","}}) => {
+        return (
+        {{- $type := compositeValueType .Value }}
+        {{- if eq $type "CompositeValueSlice" }}
+            <>
+            {{- range .Value.Value}}
+                {{- template "composite-value" . }}
+            {{- end }}
+            </>
+        {{- else }}
+            {{ template "composite-value" .Value.Value }}
+        {{- end }}
+        )
+        }
+    {{- else }}
+        {{ template "composite-value" .Value }}
+    {{- end }}
+{{- end -}}

@@ -1,0 +1,7 @@
+{{- /* gotype: github.com/woocoos/kocli/lowcode/graph.Node */ -}}
+{{- define "import" -}}
+import React from 'react';
+{{- range .Imports }}
+{{ . }};
+{{- end }}
+{{- end }}

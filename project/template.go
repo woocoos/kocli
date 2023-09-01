@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	// templates holds the Go templates for the code generation.
+	// templates hold the Go templates for the code generation.
 	templates *gen.Template
 	//go:embed template/*
 	templateDir embed.FS
