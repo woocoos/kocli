@@ -144,7 +144,10 @@
             ],
             "columns": [
               {
-                "title": "姓名",
+                "title": {
+                  "type": "JSExpression",
+                  "value": "t('col_name')"
+                },
                 "dataIndex": "name",
                 "valueType": "text"
               },
@@ -384,7 +387,11 @@
               "scrollToFirstRowOnChange": true
             },
             "rowSelection": false,
-            "dateFormatter": "string"
+            "dateFormatter": "string",
+            "request": {
+              "type": "JSFunction",
+              "value": "function(){ return this.state.info }"
+            }
           },
           "hidden": false,
           "title": "",

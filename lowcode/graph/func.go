@@ -1,18 +1,25 @@
 package graph
 
 import (
+	"fmt"
 	"github.com/tsingsun/woocoo/cmd/woco/gen"
 	"github.com/woocoos/kocli/lowcode/schema"
 	"text/template"
 )
 
 var Funcs = template.FuncMap{
-	"hasKey":             hasKey,
-	"isComponent":        isComponent,
-	"compositeValueType": compositeValueType,
-	"propsNeedBrace":     propsNeedBrace,
-	"sQuoteToQuote":      sQuoteToQuote,
-	"joinSlice":          gen.Funcs["join"],
+	"hasKey":         hasKey,
+	"isComponent":    isComponent,
+	"propsNeedBrace": propsNeedBrace,
+	"sQuoteToQuote":  sQuoteToQuote,
+	"joinSlice":      gen.Funcs["join"],
+	"debugger":       debugger,
+}
+
+// debugger use {{ debugger . }} in template
+func debugger(t any) string {
+	fmt.Print(t)
+	return ""
 }
 
 func hasKey(m map[string]any, key string) bool {
@@ -25,32 +32,9 @@ func isComponent(tp any) bool {
 	return ok
 }
 
-func compositeValueType(v schema.CompositeValue) string {
-	switch v.Value.(type) {
-	case schema.CompositeValueMap:
-		return schema.CVTypeMap.String()
-	case schema.CompositeValueSlice:
-		return schema.CVTypeSlice.String()
-	case schema.CompositeValue:
-		return schema.CVTypeDefault.String()
-	case int, float64:
-		return schema.CVTypeNumber.String()
-	case bool:
-		return schema.CVTypeBoolean.String()
-	case string:
-		return schema.CVTypeString.String()
-	case *schema.JSSlot:
-		return schema.CVTypeJSSlot.String()
-	case schema.Component:
-		return "Component"
-	default:
-		return schema.CVTypeAny.String()
-	}
-}
-
 // 判断组件Props是否需要添加大括号,对于字符串类型不需要
 func propsNeedBrace(v schema.CompositeValue) bool {
-	str := compositeValueType(v)
+	str := v.TypeString()
 	switch schema.CVType(str) {
 	case schema.CVTypeString:
 		return false

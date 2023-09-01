@@ -2,8 +2,8 @@
 {{- define "component" -}}
     <{{ .ComponentName }}
     {{- $props:= .Props.PropsMap}}
-    {{- range $key,$value := $props}}
-        {{- $type := compositeValueType $value }}
+    {{- range $key,$value := $props }}
+        {{- $type := $value.TypeString }}
         {{- $needBrace := propsNeedBrace $value }}
         {{ $key}} ={{ if $needBrace }}{{"{"}}{{ end }}
         {{- if eq $type "String" }}
@@ -39,7 +39,7 @@
 
 {{- /* gotype: github.com/woocoos/kocli/lowcode/schema.CompositeValue*/ -}}
 {{- define "composite-value" -}}
-    {{- $type := compositeValueType . }}
+    {{- $type := .TypeString }}
     {{- template "composite-value-nostring" . }}
     {{- if eq $type "String" -}}
         {{- .Value | squote }}
@@ -47,7 +47,7 @@
 {{- end -}}
 
 {{- define "composite-value-nostring" -}}
-    {{- $type := compositeValueType . }}
+    {{- $type := .TypeString }}
     {{- if eq $type "CompositeValueSlice" -}}
         [
         {{- $last := sub (len .Value) 1}}
@@ -64,7 +64,11 @@
     {{- else if eq $type "Number" -}}
         {{- .Value }}
     {{- else if eq $type "JSSlot" -}}
-        {{- template "jsslot" .Value -}}
+        {{- template "js-slot" .Value -}}
+    {{- else if eq $type "JSExpression" }}
+        {{- template "js-expression" .Value -}}
+    {{- else if eq $type "JSFunction"}}
+        {{- template "js-function" .Value -}}
     {{ else if eq $type "Component" }}
         {{ template "component" .Value }}
     {{- end }}
