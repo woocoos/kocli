@@ -5,12 +5,13 @@ go 1.20
 require (
 	entgo.io/ent v0.12.3
 	github.com/99designs/gqlgen v0.17.34
+	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/stretchr/testify v1.8.3
 	github.com/tsingsun/woocoo v0.3.1-0.20230703031137-259d6d0990b3
-	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230721074819-dc379a88fbf5
+	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20230901075900-1712da41155c
 	github.com/urfave/cli/v2 v2.25.5
 	github.com/woocoos/entco v0.0.0-20230702090420-e7c45fe78ba6
 	github.com/woocoos/knockout v0.0.0-20230817102841-c8fa49e5c4d7
@@ -23,7 +24,6 @@ require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
-	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
