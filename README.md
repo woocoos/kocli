@@ -78,3 +78,12 @@ menu data example:
 
 1. `path` will be auto generator an action.
 2. `children` will be generated as a menu dir.
+
+## lowcode
+
+lowcode uses [typescript-formatter](https://github.com/vvakame/typescript-formatter) to format typescript code.
+you need to install it first.
+
+```
+npm install -g typescript-formatter
+```

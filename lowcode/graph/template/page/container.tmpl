@@ -1,0 +1,26 @@
+{{- /* gotype: github.com/woocoos/kocli/lowcode/graph.Node */ -}}
+{{ define "page" }}
+    {{- $node := .Page.ContainerSchema.NodeSchema }}
+    {{- $props:= $node.Props}}
+    <div
+    {{- if $props.Style }}
+        {{- template "props/style" $props }}
+    {{- end }}
+    >
+        {{- range $node.Children }}
+            {{- if isComponent .Value }}
+                {{ template "component" .Value }}
+            {{- end }}
+        {{- end}}
+    </div>
+{{ end }}
+
+{{ define "props/style" }}
+    {{- $len := len .Style }}
+    style={{"{{ "}}
+    {{- range $key,$value:=.Style }}
+        {{- $len = sub $len 1 -}}
+        {{- $key }}: '{{ $value.Value }}'{{ if gt $len 0 }},{{ end }}
+    {{- end }}
+    {{- " }}"}}
+{{- end }}
