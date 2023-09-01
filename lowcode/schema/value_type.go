@@ -184,3 +184,31 @@ func (cv *CompositeValue) LoadComponentNames() (cns []string) {
 	}
 	return
 }
+
+// TypeString 返回值类型字符串
+func (cv CompositeValue) TypeString() string {
+	switch cv.Value.(type) {
+	case CompositeValueMap:
+		return CVTypeMap.String()
+	case CompositeValueSlice:
+		return CVTypeSlice.String()
+	case CompositeValue:
+		return CVTypeDefault.String()
+	case int, float64:
+		return CVTypeNumber.String()
+	case bool:
+		return CVTypeBoolean.String()
+	case string:
+		return CVTypeString.String()
+	case *JSSlot:
+		return CVTypeJSSlot.String()
+	case *JSExpression:
+		return CVTypeJSExpression.String()
+	case *JSFunction:
+		return CVTypeJSFunction.String()
+	case Component:
+		return "Component"
+	default:
+		return CVTypeAny.String()
+	}
+}
