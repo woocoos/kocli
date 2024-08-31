@@ -1,3 +1,5 @@
+//go:build ignore
+
 // GqlInOne is a tool to merge all gqlgen schema files into one file
 package main
 

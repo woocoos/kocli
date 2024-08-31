@@ -11,9 +11,9 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/tsingsun/woocoo"
 	"github.com/tsingsun/woocoo/pkg/conf"
-	"github.com/woocoos/entco/ecx"
-	"github.com/woocoos/entco/pkg/snowflake"
-	"github.com/woocoos/entco/schemax"
+	"github.com/woocoos/knockout-go/ent/clientx"
+	"github.com/woocoos/knockout-go/ent/schemax"
+	"github.com/woocoos/knockout-go/pkg/snowflake"
 	"github.com/woocoos/knockout/ent"
 	"github.com/woocoos/knockout/ent/app"
 	"github.com/woocoos/knockout/ent/appaction"
@@ -107,9 +107,9 @@ func GenEntSchemaRes(cfg Config) error {
 			apc.SetID(inst.ID)
 		}
 	}
-	err = ecx.WithTx(context.Background(), func(ctx context.Context) (ecx.Transactor, error) {
+	err = clientx.WithTx(context.Background(), func(ctx context.Context) (clientx.Transactor, error) {
 		return cfg.PortalClient.Tx(ctx)
-	}, func(itx ecx.Transactor) error {
+	}, func(itx clientx.Transactor) error {
 		tx := itx.(*ent.Tx)
 		err := tx.AppRes.CreateBulk(builder...).OnConflict().UpdateNewValues().Exec(context.Background())
 		return err
@@ -124,7 +124,7 @@ func GenEntSchemaRes(cfg Config) error {
 func checkResAnnotation(sch *load.Schema) (has bool, err error, fn arnFieldFunc) {
 	var ann schemax.Annotation
 	for ak, vals := range sch.Annotations {
-		if ak == schemax.EntCoAnnotationName {
+		if ak == schemax.AnnotationName {
 			err = mapstructure.Decode(vals, &ann)
 			if err != nil {
 				return
@@ -158,7 +158,7 @@ func checkTenant(sch *load.Schema) bool {
 	}
 	var ann schemax.Annotation
 	for ak, vals := range sch.Annotations {
-		if ak == schemax.EntCoAnnotationName {
+		if ak == schemax.AnnotationName {
 			err := mapstructure.Decode(vals, &ann)
 			if err != nil {
 				panic(err)
@@ -237,9 +237,9 @@ func GenGqlActions(cfg Config) error {
 			builder = append(builder, apc)
 		}
 	}
-	err = ecx.WithTx(context.Background(), func(ctx context.Context) (ecx.Transactor, error) {
+	err = clientx.WithTx(context.Background(), func(ctx context.Context) (clientx.Transactor, error) {
 		return cfg.PortalClient.Tx(ctx)
-	}, func(itx ecx.Transactor) error {
+	}, func(itx clientx.Transactor) error {
 		tx := itx.(*ent.Tx)
 		err := tx.AppAction.CreateBulk(builder...).OnConflict().UpdateNewValues().Exec(context.Background())
 		return err
@@ -296,9 +296,9 @@ func GenAppMenu(cfg Config) error {
 		appmenus = append(appmenus, sms...)
 		appactions = append(appactions, sas...)
 	}
-	err = ecx.WithTx(context.Background(), func(ctx context.Context) (ecx.Transactor, error) {
+	err = clientx.WithTx(context.Background(), func(ctx context.Context) (clientx.Transactor, error) {
 		return cfg.PortalClient.Tx(ctx)
-	}, func(itx ecx.Transactor) error {
+	}, func(itx clientx.Transactor) error {
 		tx := itx.(*ent.Tx)
 		err := tx.AppAction.CreateBulk(appactions...).OnConflict().UpdateNewValues().
 			Exec(context.Background())

@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
+	"github.com/woocoos/entcache"
 	"github.com/woocoos/kocli/integration/resource/ent/resource"
 	"golang.org/x/sync/semaphore"
 )
@@ -23,8 +24,10 @@ type Noder interface {
 	IsNode()
 }
 
+var resourceImplementors = []string{"Resource", "Node"}
+
 // IsNode implements the Node interface check for GQLGen.
-func (n *Resource) IsNode() {}
+func (*Resource) IsNode() {}
 
 var errNodeInvalidID = &NotFoundError{"node"}
 
@@ -87,15 +90,12 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 	case resource.Table:
 		query := c.Resource.Query().
 			Where(resource.ID(id))
-		query, err := query.CollectFields(ctx, "Resource")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, resourceImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(entcache.WithRefEntryKey(ctx, "Resource", id))
 	default:
 		return nil, fmt.Errorf("cannot resolve noder from table %q: %w", table, errNodeInvalidID)
 	}
@@ -172,7 +172,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case resource.Table:
 		query := c.Resource.Query().
 			Where(resource.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "Resource")
+		query, err := query.CollectFields(ctx, resourceImplementors...)
 		if err != nil {
 			return nil, err
 		}

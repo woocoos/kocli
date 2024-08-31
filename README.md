@@ -19,7 +19,7 @@ kocli init -p github.com/woocoos/helloworld
 or go get kocli and go run the script
 
 ```bash
-go run github.com/woocoos/kocli/script/initproject/main.go
+go run github.com/woocoos/kocli/script/initproject/main.go --package github.com/woocoos/helloworld target .
 ```
 
 in codegen directory, scripts use `//go:build ignore` to keep ent generate run correctly, 

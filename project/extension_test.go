@@ -21,7 +21,7 @@ func Test_Generate(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "knockout",
+			name: "knockout-skip-run-gen",
 			args: args{
 				cfg: &project.Config{
 					Package: "github.com/tsingsun/knockouttest",
@@ -34,6 +34,21 @@ func Test_Generate(t *testing.T) {
 						WithSkipRunGen(true),
 						WithTargetDir(kodir),
 						WithFrontend(),
+					)),
+				},
+			},
+		},
+		{
+			name: "knockout-api-app",
+			args: args{
+				cfg: &project.Config{
+					Package: "github.com/tsingsun/knockouttest",
+					Target:  kodir,
+					Modules: []string{"knockout"},
+				},
+				opts: []project.Option{
+					project.Extensions(New(
+						WithTargetDir(kodir),
 					)),
 				},
 			},

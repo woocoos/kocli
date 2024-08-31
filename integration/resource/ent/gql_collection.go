@@ -5,9 +5,7 @@ package ent
 import (
 	"context"
 
-	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/woocoos/entco/pkg/pagination"
 	"github.com/woocoos/kocli/integration/resource/ent/resource"
 )
 
@@ -17,13 +15,13 @@ func (r *ResourceQuery) CollectFields(ctx context.Context, satisfies ...string) 
 	if fc == nil {
 		return r, nil
 	}
-	if err := r.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+	if err := r.collectField(ctx, false, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
 		return nil, err
 	}
 	return r, nil
 }
 
-func (r *ResourceQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+func (r *ResourceQuery) collectField(ctx context.Context, oneNode bool, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
 	var (
 		unknownSeen    bool
@@ -140,55 +138,17 @@ func unmarshalArgs(ctx context.Context, whereInput any, args map[string]any) map
 	return args
 }
 
-func limitRows(ctx context.Context, partitionBy string, limit int, first, last *int, orderBy ...sql.Querier) func(s *sql.Selector) {
-	offset := 0
-	if sp, ok := pagination.SimplePaginationFromContext(ctx); ok {
-		if first != nil {
-			offset = (sp.PageIndex - sp.CurrentIndex - 1) * *first
-		}
-		if last != nil {
-			offset = (sp.CurrentIndex - sp.PageIndex - 1) * *last
-		}
-	}
-	return func(s *sql.Selector) {
-		d := sql.Dialect(s.Dialect())
-		s.SetDistinct(false)
-		with := d.With("src_query").
-			As(s.Clone()).
-			With("limited_query").
-			As(
-				d.Select("*").
-					AppendSelectExprAs(
-						sql.RowNumber().PartitionBy(partitionBy).OrderExpr(orderBy...),
-						"row_number",
-					).
-					From(d.Table("src_query")),
-			)
-		t := d.Table("limited_query").As(s.TableName())
-		if offset != 0 {
-			*s = *d.Select(s.UnqualifiedColumns()...).
-				From(t).
-				Where(sql.GT(t.C("row_number"), offset)).Limit(limit).
-				Prefix(with)
-		} else {
-			*s = *d.Select(s.UnqualifiedColumns()...).
-				From(t).
-				Where(sql.LTE(t.C("row_number"), limit)).
-				Prefix(with)
-		}
-	}
-}
-
 // mayAddCondition appends another type condition to the satisfies list
 // if condition is enabled (Node/Nodes) and it does not exist in the list.
-func mayAddCondition(satisfies []string, typeCond string) []string {
-	if len(satisfies) == 0 {
-		return satisfies
-	}
-	for _, s := range satisfies {
-		if typeCond == s {
-			return satisfies
+func mayAddCondition(satisfies []string, typeCond []string) []string {
+Cond:
+	for _, c := range typeCond {
+		for _, s := range satisfies {
+			if c == s {
+				continue Cond
+			}
 		}
+		satisfies = append(satisfies, c)
 	}
-	return append(satisfies, typeCond)
+	return satisfies
 }

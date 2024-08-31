@@ -6,21 +6,22 @@ package main
 
 import (
 	"entgo.io/contrib/entgql"
-	"entgo.io/contrib/entproto"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
-	"github.com/woocoos/entco/genx"
+	entcachegen "github.com/woocoos/entcache/gen"
+	"github.com/woocoos/knockout-go/codegen/entx"
 	"log"
 	"os"
 )
 
 func main() {
 	ex, err := entgql.NewExtension(
+	    entx.WithGqlWithTemplates(),
 		entgql.WithSchemaGenerator(),
 		entgql.WithWhereInputs(true),
 		entgql.WithConfigPath("codegen/gqlgen/gqlgen.yaml"),
 		entgql.WithSchemaPath("api/graphql/ent.graphql"),
-		entgql.WithSchemaHook(genx.ChangeRelayNodeType()),
+		entgql.WithSchemaHook(entx.ChangeRelayNodeType()),
 	)
 	if err != nil {
 		log.Fatalf("creating entgql extension: %v", err)
@@ -28,12 +29,14 @@ func main() {
 	os.MkdirAll("./api/graphql", os.ModePerm)
 	opts := []entc.Option{
 		entc.Extensions(ex),
-		genx.GlobalID(),
-		genx.SimplePagination(),
+		entx.GlobalID(),
+		entx.SimplePagination(),
+		entcachegen.QueryCache(),
 	}
 	err = entc.Generate("./codegen/entgen/schema", &gen.Config{
 		Package:  "{{ .Config.Package }}/ent",
-		Features: []gen.Feature{gen.FeatureVersionedMigration, gen.FeatureUpsert, gen.FeatureIntercept},
+		Features: []gen.Feature{gen.FeatureVersionedMigration, gen.FeatureUpsert,
+		    gen.FeatureIntercept,gen.FeatureSchemaConfig},
 		Target:   "./ent",
 	}, opts...)
 	if err != nil {
@@ -52,7 +55,7 @@ import (
 	"github.com/99designs/gqlgen/codegen/config"
 	"github.com/99designs/gqlgen/plugin/modelgen"
 	"github.com/vektah/gqlparser/v2/ast"
-	"github.com/woocoos/entco/genx/gql"
+	"github.com/woocoos/knockout-go/codegen/gqlx"
 	"log"
 	"os"
 )
@@ -89,7 +92,7 @@ func main() {
 	}
 
 	err = api.Generate(cfg, api.ReplacePlugin(&p),
-		api.AddPlugin(gql.NewResolverPlugin(gql.WithRelayNodeEx())),
+	    api.AddPlugin(gqlx.NewResolverPlugin(gqlx.WithRelayNodeEx(), gqlx.WithConfig(cfg))),
 	)
 
 	if err != nil {
@@ -148,7 +151,22 @@ directives:
     skip_runtime: true
 {{ end }}
 
-{{ define "codegen/entgen/schema/helloworld" }}
+{{ define "api/graphql/model/doc" }}
+package model
+{{ end }}
+
+{{ define "version/info" }}
+package version
+const (
+    AppCode = "{{ pkgName $.Package }}"
+    Version = "0.0.1"
+)
+{{ end }}
+
+{{ define "codegen/entgen/schema" }}
+{{ end }}
+
+{{ define "codegen/entgen/schema/hello" }}
 package schema
 
 import (
@@ -157,44 +175,102 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
-	"github.com/woocoos/entco/schemax"
+	"github.com/woocoos/knockout-go/ent/schemax"
 )
 
-// HelloWorld holds the schema definition for the HelloWorld entity.
-type HelloWorld struct {
+// Hello holds the schema definition for the HelloWorld entity.
+type Hello struct {
 	ent.Schema
 }
 
-func (HelloWorld) Annotations() []schema.Annotation {
+func (Hello) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "hello_world"},
+		entsql.Annotation{Table: "hello"},
+		schemax.TenantField("tenant_id"),
 		entgql.QueryField(),
 		entgql.RelayConnection(),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }
 
-func (HelloWorld) Mixin() []ent.Mixin {
+func (Hello) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		schemax.IntID{},
 		schemax.AuditMixin{},
+        // this is a tenant mixin, but depends the code after gen ent, you should manual enables.
+        //
+        // import "{project}/ent/intercept"
+        // schemax.NewTenantMixin[intercept.Query, *gen.Client](version.AppCode, intercept.NewQuery),
+		//schemax.NewTenantMixin[intercept.Query, *gen.Client](version.AppCode, intercept.NewQuery),
 	}
 }
 
-// Fields of the HelloWorld.
-func (HelloWorld) Fields() []ent.Field {
+// Fields of the Hello.
+func (Hello) Fields() []ent.Field {
 	return []ent.Field{
+	    field.Int("tenant_id").Comment("组织ID").Annotations(entgql.Type("ID")),
 		field.Time("born"),
 	}
 }
 
-// Edges of the HelloWorld.
-func (HelloWorld) Edges() []ent.Edge {
+// Edges of the Hello.
+func (Hello) Edges() []ent.Edge {
 	return nil
 }
 
 {{ end }}
 
-{{ define "ent/generate" }}
-package ent
+
+{{ define "codegen/entgen/schema/world" }}
+package schema
+
+import (
+	"entgo.io/contrib/entgql"
+	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/field"
+	"github.com/woocoos/knockout-go/ent/schemax"
+)
+
+// World holds the schema definition for the HelloWorld entity.
+type World struct {
+	ent.Schema
+}
+
+func (World) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "world"},
+		schemax.TenantField("tenant_id"),
+		entgql.QueryField(),
+		entgql.RelayConnection(),
+		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
+	}
+}
+
+func (World) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		schemax.SnowFlakeID{},
+		schemax.AuditMixin{},
+		// this is a tenant mixin, but depends the code after gen ent, you should manual enables.
+		//
+		// import "{project}/ent/intercept"
+		// schemax.NewTenantMixin[intercept.Query, *gen.Client](version.AppCode, intercept.NewQuery),
+		schemax.NotifyMixin{},
+	}
+}
+
+// Fields of the World.
+func (World) Fields() []ent.Field {
+	return []ent.Field{
+	    field.Int("tenant_id").Comment("组织ID").Annotations(entgql.Type("ID")),
+		field.String("zone"),
+	}
+}
+
+// Edges of the World.
+func (World) Edges() []ent.Edge {
+	return nil
+}
+
 {{ end }}

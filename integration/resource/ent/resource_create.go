@@ -139,11 +139,15 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 // ResourceCreateBulk is the builder for creating many Resource entities in bulk.
 type ResourceCreateBulk struct {
 	config
+	err      error
 	builders []*ResourceCreate
 }
 
 // Save creates the Resource entities in the database.
 func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
+	if rcb.err != nil {
+		return nil, rcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
 	nodes := make([]*Resource, len(rcb.builders))
 	mutators := make([]Mutator, len(rcb.builders))

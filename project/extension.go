@@ -4,13 +4,17 @@ import (
 	"bytes"
 	"github.com/tsingsun/woocoo/cmd/woco/gen"
 	"github.com/tsingsun/woocoo/cmd/woco/project"
+	"log"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 var _ gen.Extension = (*Extension)(nil)
 
 var (
-	mainT = gen.ParseT("template/main.tmpl", templateDir, ExtensionFuncs)
+	mainT = gen.ParseT("entry", templateDir, ExtensionFuncs,
+		"template/main.tmpl", "template/graphql.tmpl")
 )
 
 type Option func(*Extension)
@@ -60,19 +64,36 @@ func (e *Extension) GeneratedHooks() []gen.GeneratedHook {
 			if err != nil {
 				return err
 			}
-			_ = runGoModTidy(e.TargetDir)
-			// ignore gqlgen error
-			_ = gen.RunCmd(e.TargetDir, "go", "run", "codegen/gqlgen/gqlgen.go")
-
-			b := &bytes.Buffer{}
-			err = mainT.ExecuteTemplate(b, "main", graph)
+			err = runGoModTidy(e.TargetDir)
 			if err != nil {
-				return err
+				log.Println(err)
 			}
-			if err = gen.FormatGoFile(filepath.Join(e.TargetDir, "cmd/main.go"), b.Bytes()); err != nil {
-				return err
+			// ignore gqlgen error
+			err = gen.RunCmd(e.TargetDir, "go", "run", "codegen/gqlgen/gqlgen.go")
+			if err != nil {
+				log.Println(err)
 			}
-			_ = runGoModTidy(e.TargetDir)
+			for _, mt := range mainT.Templates() {
+				tn := mt.Name()
+				if strings.HasSuffix(tn, ".tmpl") {
+					// skip
+					continue
+				}
+				b := new(bytes.Buffer)
+				err = mt.Execute(b, graph)
+				if err != nil {
+					return err
+				}
+				fname := filepath.Join(e.TargetDir, mt.Name()+".go")
+				os.MkdirAll(filepath.Dir(fname), os.ModePerm)
+				if err = gen.FormatGoFile(fname, b.Bytes()); err != nil {
+					return err
+				}
+			}
+			err = runGoModTidy(e.TargetDir)
+			if err != nil {
+				log.Println(err)
+			}
 			return nil
 		},
 	}
@@ -107,7 +128,6 @@ func (e *Extension) initTemplates() {
 		gen.ParseT("template/codegen.tmpl", templateDir, ExtensionFuncs),
 		gen.ParseT("template/makefile.tmpl", templateDir, ExtensionFuncs),
 		gen.ParseT("template/test.tmpl", templateDir, ExtensionFuncs),
-		//gen.ParseT("template/main.tmpl", templateDir, ExtensionFuncs),
 		gen.ParseT("template/gomod.tmpl", templateDir, ExtensionFuncs),
 	)
 }

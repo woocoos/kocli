@@ -1,28 +1,31 @@
 package main
 
 import (
-	"log"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
-	"github.com/woocoos/entco/genx"
+	entcachegen "github.com/woocoos/entcache/gen"
+	"github.com/woocoos/knockout-go/codegen/entx"
+	"log"
 )
 
 func main() {
 	ex, err := entgql.NewExtension(
 		entgql.WithSchemaGenerator(),
+		entx.WithGqlWithTemplates(),
 		entgql.WithWhereInputs(true),
 		entgql.WithConfigPath("gqlgen.yml"),
 		entgql.WithSchemaPath("ent.graphql"),
-		entgql.WithSchemaHook(genx.ChangeRelayNodeType()),
+		entgql.WithSchemaHook(entx.ChangeRelayNodeType()),
 	)
 	if err != nil {
 		log.Fatalf("creating entgql extension: %v", err)
 	}
 	opts := []entc.Option{
-		entc.Extensions(ex),
-		genx.SimplePagination(),
+		entc.Extensions(ex, entx.DecimalExtension{}),
+		entx.GlobalID(),
+		entx.SimplePagination(),
+		entcachegen.QueryCache(),
 	}
 	err = entc.Generate("./ent/schema", &gen.Config{
 		Package: "github.com/woocoos/kocli/integration/resource/ent",

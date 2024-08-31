@@ -3,11 +3,12 @@ package appres
 import (
 	"context"
 	"github.com/stretchr/testify/suite"
-	"github.com/woocoos/entco/schemax/typex"
+	"github.com/woocoos/knockout-go/ent/schemax/typex"
 	"github.com/woocoos/knockout/ent"
 	"github.com/woocoos/knockout/ent/app"
 	"github.com/woocoos/knockout/ent/appaction"
 	"github.com/woocoos/knockout/ent/migrate"
+	"github.com/woocoos/kocli/appres"
 	"os"
 	"testing"
 
@@ -39,13 +40,13 @@ func TestAppres(t *testing.T) {
 }
 
 func (s *testSuite) TestGenEntSchemaRes() {
-	cfg := Config{
+	cfg := appres.Config{
 		KnockoutConfig: "../integration/resource/knockout.yaml",
 		EntConfig:      "../integration/resource/ent/schema",
 		AppCode:        "resource",
 		PortalClient:   s.client,
 	}
-	err := GenEntSchemaRes(cfg)
+	err := appres.GenEntSchemaRes(cfg)
 	s.Require().NoError(err)
 	all, err := s.client.AppRes.Query().All(context.Background())
 	s.Require().NoError(err)
@@ -63,13 +64,13 @@ func (s *testSuite) TestGenQqlAction() {
 	if err := os.Chdir(`../integration/resource`); err != nil {
 		s.Require().NoError(err)
 	}
-	cfg := Config{
+	cfg := appres.Config{
 		KnockoutConfig: "knockout.yaml",
 		GQLConfig:      "gqlgen.yml",
 		AppCode:        "resource",
 		PortalClient:   s.client,
 	}
-	err = GenGqlActions(cfg)
+	err = appres.GenGqlActions(cfg)
 	s.Require().NoError(err)
 	all, err := s.client.AppAction.Query().Where(appaction.KindIn(appaction.KindGraphql)).All(context.Background())
 	s.Require().NoError(err)
@@ -83,7 +84,7 @@ func (s *testSuite) TestGenQqlAction() {
 
 func (s *testSuite) TestGenAppMenu() {
 	s.client.AppAction.Delete().ExecX(context.Background())
-	cfg := Config{
+	cfg := appres.Config{
 		KnockoutConfig: "../integration/resource/knockout.yaml",
 		MenuConfig:     "../integration/resource/web/src/components/layout/menu.json",
 		AppCode:        "resource",
@@ -91,7 +92,7 @@ func (s *testSuite) TestGenAppMenu() {
 	}
 	menuUpd := 0
 	s.Run("init", func() {
-		err := GenAppMenu(cfg)
+		err := appres.GenAppMenu(cfg)
 		s.Require().NoError(err)
 		menus, err := s.client.AppMenu.Query().All(context.Background())
 		s.Require().NoError(err)
@@ -105,7 +106,7 @@ func (s *testSuite) TestGenAppMenu() {
 	s.Require().NoError(err)
 	upd.Update().SetIcon("changed").SetUpdatedBy(0).SaveX(context.Background())
 	s.Run("update", func() {
-		err := GenAppMenu(cfg)
+		err := appres.GenAppMenu(cfg)
 		s.Require().NoError(err)
 		menus, err := s.client.AppMenu.Query().All(context.Background())
 		s.Require().NoError(err)

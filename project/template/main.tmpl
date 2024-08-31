@@ -1,102 +1,29 @@
 {{/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */}}
 
-{{ define "main" }}
+{{ define "cmd/main" }}
 
 {{ with $.Header }}{{ . }}{{ end }}
 package main
 
 import(
-    "entgo.io/contrib/entgql"
-    "github.com/99designs/gqlgen/graphql/handler"
-    "github.com/tsingsun/woocoo"
-    "github.com/tsingsun/woocoo/contrib/gql"
-    "github.com/tsingsun/woocoo/pkg/conf"
-    "github.com/tsingsun/woocoo/pkg/log"
-    "github.com/tsingsun/woocoo/web"
-    "github.com/woocoos/entco/ecx"
-    "github.com/woocoos/entco/gqlx"
-    "github.com/woocoos/entco/ecx/oteldriver"
-    "github.com/tsingsun/woocoo/pkg/log"
-    "github.com/tsingsun/woocoo/rpc/grpcx"
-    "{{ .Config.Package }}/cmd/internal/otel"
-    "{{ .Config.Package }}/ent"
-    "{{ .Config.Package }}/api/graphql"
+	"github.com/woocoos/knockout-go/ent/clientx"
+	"github.com/woocoos/knockout-go/pkg/koapp"
+	"{{ .Config.Package }}/api/graphql"
 
-    _ "github.com/go-sql-driver/mysql"
-    _ "{{ .Config.Package }}/ent/runtime"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/woocoos/knockout-go/pkg/snowflake"
+	_ "{{ .Config.Package }}/ent/runtime"
 )
-var (
-    dbClient *ent.Client
-)
+
 func main(){
-    app := woocoo.New()
-    cnf := app.AppConfiguration()
-    buildEntClient(cnf)
-    defer dbClient.Close()
+    app := koapp.New()
 
-    otelStop := otel.Apply(cnf)
-    defer otelStop()
+    rmsSvr := graphql.NewServer(app)
 
-    err := snowflake.SetDefaultNode(cnf.Sub("snowflake"))
-    if err != nil {
-        log.Panic(err)
-    }
-    {{- if .HasModule "web" }}
-        webSrv := buildWebServer(cnf)
-        app.RegisterServer(webSrv)
-    {{- end }}
-    {{ if .HasModule "grpc"}}
-        grpcSrv := newGRPCServer(cnf)
-        app.RegisterServer(grpcSrv)
-    {{- end }}
-    if err := app.Run(); err != nil {
-        log.Panic(err)
-    }
+	app.RegisterServer(rmsSvr, clientx.ChangeSet)
+	if err := app.Run(); err != nil {
+		panic(err)
+	}
 }
-    func buildEntClient(cnf *conf.AppConfiguration) *ent.Client {
-        pd := oteldriver.BuildOTELDriver(cnf, "store.{{ pkgName $.Package }}")
-        pd = ecx.BuildEntCacheDriver(cnf, pd)
-        if cnf.Development {
-            dbClient = ent.NewClient(ent.Driver(pd), ent.Debug())
-        } else {
-            dbClient = ent.NewClient(ent.Driver(pd))
-        }
-        return dbClient
-    }
-{{ if .HasModule "web" }}
-    func buildWebServer(cnf *conf.AppConfiguration) *web.Server {
-        webSrv := web.New(web.WithConfiguration(cnf.Sub("web")),
-            web.WithGracefulStop(),
-            web.RegisterMiddleware(gql.New()),
-            web.RegisterMiddleware(otelweb.NewMiddleware()),
-            web.RegisterMiddleware(authz.New()),
-            identity.RegistryTenantIDMiddleware(),
-        )
-        // TODO below is example,you must initial graphql server after init project
-        gqlSrv := handler.New(graphql.NewSchema(graphql.WithEntClient(dbClient)))
-
-        // entcache
-        if cnf.Root().String("entcache.level") == "context" {
-            gqlSrv.AroundResponses(gqlx.ContextCache())
-        }
-        // pagination by page and limit
-        gqlSrv.AroundResponses(gqlx.SimplePagination())
-        // mutation transaction
-        gqlSrv.Use(entgql.Transactioner{TxOpener: dbClient})
-
-        if err := gql.RegisterGraphqlServer(webSrv, gqlSrv); err != nil {
-            log.Fatal(err)
-        }
-        return webSrv
-    }
-{{- end }}
-
-{{ if .HasModule "grpc"}}
-    func newGRPCServer(cnf *conf.AppConfiguration) *grpcx.Server {
-        grpcSrv := grpcx.New(grpcx.WithConfiguration(cnf.Sub("grpc")), grpcx.WithGracefulStop(),grpcx.WithGrpcLogger())
-        // TODO register grpc service
-        return grpcSrv
-    }
-{{ end }}
 
 {{ end }}

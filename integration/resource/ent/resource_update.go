@@ -33,6 +33,14 @@ func (ru *ResourceUpdate) SetName(s string) *ResourceUpdate {
 	return ru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableName(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetName(*s)
+	}
+	return ru
+}
+
 // SetDescription sets the "description" field.
 func (ru *ResourceUpdate) SetDescription(s string) *ResourceUpdate {
 	ru.mutation.SetDescription(s)
@@ -165,6 +173,14 @@ type ResourceUpdateOne struct {
 // SetName sets the "name" field.
 func (ruo *ResourceUpdateOne) SetName(s string) *ResourceUpdateOne {
 	ruo.mutation.SetName(s)
+	return ruo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableName(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetName(*s)
+	}
 	return ruo
 }
 

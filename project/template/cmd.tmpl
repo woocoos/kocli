@@ -27,75 +27,81 @@ authz:
       channel: "/casbin"
   model: "etc/rbac_model.conf"
 
+jwt: &jwt
+  signingMethod: "HS256"
+  signingKey: "secret"
+
 web:
   server:
     addr: :8080
   engine:
     routerGroups:
-      - graphql:
-          basePath: "/graphql"
+      - default:
           middlewares:
-#            - otel:
+            - cors:
+                allowOrigins: ['*']
+                allowHeaders: ["*"]
             - accessLog:
                 exclude:
                   - IntrospectionQuery
             - recovery:
             - errorHandle:
-            - jwt:
-                signingMethod: "HS256"
-                signingKey: "secret"
-                exclude:
-                  - "/graphql" #doc page
-            - tenant:
-                lookup: "header:X-Tenant-ID"
-                exclude:
-                  - "/graphql" #doc page
+            - gzip:
+      - graphql:
+          basePath: "/graphql"
+          middlewares:
             - graphql:
                 group: "/graphql"
                 withAuthorization: false
                 appCode: {{ pkgName $.Package }}
-            - gzip:
+                middlewares:
+                  operation:
+                    - tenant:
+                    - jwt: *jwt
+                    # - tokenSign: # 利用IDE开发时,可注释
+                header: ## dev mode, remove in production, set the value in your .env.local
+                  X-Tenant-ID: ${TENANT}
+                  Authorization: "${AUTHORIZATION}"
 
 store:
   {{ pkgName $.Package }}:
     driverName: mysql
     dsn: "root:@tcp(localhost:3306)/{{ pkgName $.Package }}?parseTime=true&loc=Local"
-snowflake:
-  # 机器id
-  node: 1
-  # 时间戳起始时间 北京时间 2023-01-01 00:00:00
-  epoch: 1672531200000
-  # 机器id位数
-  nodeBits: 1
-  # 序列号位数
-  stepBits: 8
+
+cache:
+  redis:
+    driverName: redis
+    addrs:
+      - 127.0.0.1:6379
+    db: 1
+    local:
+      size: 1000
+      ttl: 100s
+
 entcache:
-  level: context
-#  ttl: 5m # level: db时有效
+  hashQueryTTL: 5s
+
+kosdk:
+  client:
+    timeout: 2s
+    oauth2:
+      clientID: 206734260394752
+      clientSecret: T2UlqISVFq4DR9InXamj3l74iWdu3Tyr
+      endpoint:
+        tokenURL: http://127.0.0.1:10070/token
+      scopes:
+      # to cache->redis,if not set,will not cache in memory
+      storeKey: redis
+  signer:
+    authScheme: "KO-HMAC-SHA1"
+    authHeaders: [ "timestamp", "nonce" ]
+    signedLookups:
+      accessToken: "header:authorization>bearer"
+      timestamp:
+      nonce:
+      url: CanonicalUri
+    nonceLen: 12
+  plugin:
+    msg:
+      basePath: "http://127.0.0.1:10072/api/v2"
 {{- end -}}
-
-{{ define "cmd/internal/otel/otel" }}
-{{ with $.Header }}{{ . }}{{ end }}
-package otel
-
-import (
-    "github.com/tsingsun/woocoo/contrib/telemetry"
-    "github.com/tsingsun/woocoo/pkg/conf"
-    "go.opentelemetry.io/contrib/propagators/b3"
-)
-
-// Apply 尝试注册otel,如果配置中有otel配置,则注册.并返回关闭函数
-func Apply(cnf *conf.AppConfiguration) func() {
-    if cnf.IsSet("otel") {
-        otelCnf := cnf.Sub("otel")
-        otelcfg := telemetry.NewConfig(otelCnf,
-            telemetry.WithPropagator(b3.New()),
-        )
-        return func() {
-            otelcfg.Shutdown()
-        }
-    }
-    return func() {}
-}
-
-{{ end }}
