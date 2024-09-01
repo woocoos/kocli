@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/urfave/cli/v2"
 	"github.com/woocoos/kocli/appres"
+	"github.com/woocoos/kocli/lowcode"
 	"github.com/woocoos/kocli/project"
 	"log"
 	"os"
@@ -13,6 +14,7 @@ const Version = "0.0.1"
 var commands = []*cli.Command{
 	project.InitCmd,
 	appres.Cmd,
+	lowcode.PageCmd,
 }
 
 func main() {

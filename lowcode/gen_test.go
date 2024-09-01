@@ -10,16 +10,19 @@ import (
 
 type genSuite struct {
 	suite.Suite
+	tmpDir string
 }
 
 func Test_GenSuite(t *testing.T) {
-	suite.Run(t, new(genSuite))
+	suite.Run(t, &genSuite{
+		tmpDir: "testdata/tmp/lowcodetest",
+	})
 }
 
 func (s *genSuite) SetupSuite() {
 	assert := gen.Assets{}
-	assert.AddDir("internal/integration/lowcodetest")
-	assert.Add("internal/integration/lowcodetest/.editorconfig", []byte(`# http://editorconfig.org
+	assert.AddDir(s.tmpDir)
+	assert.Add(filepath.Join(s.tmpDir, ".editorconfig"), []byte(`# http://editorconfig.org
 root = true
 
 [*]
@@ -34,7 +37,7 @@ insert_final_newline = true
 }
 
 func (s *genSuite) Test_Generate_ProTable() {
-	kodir, err := filepath.Abs("internal/integration/lowcodetest")
+	kodir, err := filepath.Abs(s.tmpDir)
 	s.Require().NoError(err)
 	cfg := &graph.Config{
 		Schema: "./testdata/protable/schema.json",

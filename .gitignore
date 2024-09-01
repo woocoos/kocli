@@ -26,4 +26,4 @@ go.work*
 
 #misc
 /test/tmp
-/lowcode/internal/integration
+/lowcode/testdata/tmp
