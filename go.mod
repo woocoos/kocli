@@ -2,6 +2,8 @@ module github.com/woocoos/kocli
 
 go 1.22.5
 
+toolchain go1.23.0
+
 require (
 	entgo.io/ent v0.14.0
 	github.com/99designs/gqlgen v0.17.48
