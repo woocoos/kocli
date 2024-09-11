@@ -2,17 +2,17 @@
 [[ define "web/src/components/Layout/index.tsx" ]]
 import store from '@/store';
 import { useEffect, useState } from 'react';
-import menuList from './menu.json';
+import menuList from '@/components/layout/menu.json';
 import { history } from 'ice';
 import { Outlet, useLocation } from '@ice/runtime';
 import i18n from '@/i18n';
 import { MenuDataItem, useToken } from '@ant-design/pro-components';
 import { monitorKeyChange } from '@/pkg/local-store';
-import { getFilesRaw } from '@/services/files';
 import { Layout, useLeavePrompt } from '@knockout-js/layout';
-import { logout, urlSpm } from '@/services/auth';
+import { getAppDeployConfig, logout, urlSpm } from '@/services/auth';
 import defaultAvatar from '@/assets/images/default-avatar.png';
 import { createFromIconfontCN } from '@ant-design/icons';
+import { getStorageUrl } from '@knockout-js/api';
 
 const ICE_APP_CODE = process.env.ICE_APP_CODE ?? '',
   NODE_ENV = process.env.NODE_ENV ?? '',
@@ -23,20 +23,11 @@ const ICE_APP_CODE = process.env.ICE_APP_CODE ?? '',
 export default () => {
   const [userState, userDispatcher] = store.useModel('user'),
     [appState, appDispatcher] = store.useModel('app'),
+    [open, setOpen] = useState(false),
     [checkLeave] = useLeavePrompt(),
     location = useLocation(),
     { token } = useToken(),
     [avatar, setAvatar] = useState<string>();
-
-  useEffect(() => {
-    if (userState.user?.avatarFileId) {
-      getFilesRaw(userState.user?.avatarFileId, 'url').then(result => {
-        if (typeof result === 'string') {
-          setAvatar(result);
-        }
-      })
-    }
-  }, [userState.user]);
 
   useEffect(() => {
     i18n.changeLanguage(appState.locale);
@@ -44,6 +35,11 @@ export default () => {
 
 
   useEffect(() => {
+    if (userState.user?.avatar) {
+      getStorageUrl(userState.user?.avatar).then(result => {
+        setAvatar(result);
+      })
+    }
     monitorKeyChange([
       {
         key: 'tenantId',
@@ -78,10 +74,13 @@ export default () => {
     pathname={location.pathname}
     IconFont={IconFont}
     onClickMenuItem={async (item, isOpen) => {
-      if (isOpen) {
-        window.open(await urlSpm(item.path ?? ''));
-      } else {
-        history?.push(await urlSpm(item.path ?? ''));
+      if (checkLeave()) {
+        const url = await urlSpm(item.path ?? '')
+        if (isOpen) {
+          window.open(url);
+        } else {
+          history?.push(url);
+        }
       }
     }}
     tenantProps={{
@@ -109,6 +108,35 @@ export default () => {
       onChange: (value) => {
         appDispatcher.updateDarkMode(value);
       },
+    }}
+    aggregateMenuProps={{
+      open: open,
+      onChangeOpen: setOpen,
+      onClick: async (menuItem, app, isOpen) => {
+        if (checkLeave()) {
+          let url = menuItem.route ?? '';
+          const appDeployConfig = await getAppDeployConfig();
+          if (appDeployConfig) {
+            const adcData = appDeployConfig.find(adc => adc.appCode == app.code);
+            if (adcData) {
+              url = `${adcData.entry}${menuItem.route}`.replaceAll('//', '/');
+            }
+          }
+          if (url) {
+            url = await urlSpm(url)
+            if (isOpen) {
+              window.open(url);
+            } else {
+              if (url.toLowerCase().startsWith("http")) {
+                window.location.href = url;
+              } else {
+                history?.push(url);
+              }
+            }
+          }
+          setOpen(false);
+        }
+      }
     }}
     proLayoutProps={{
       token: {
@@ -148,8 +176,11 @@ import { Outlet, useLocation } from "@ice/runtime"
 import { useEffect } from "react";
 import { CollectProviders } from "@knockout-js/layout";
 
+const ICE_APP_CODE = process.env.ICE_APP_CODE ?? '';
+
 export default () => {
   const [appState] = store.useModel('app'),
+    [userState] = store.useModel('user'),
     location = useLocation();
 
   useEffect(() => {
@@ -160,6 +191,8 @@ export default () => {
     locale={appState.locale}
     dark={appState.darkMode}
     pathname={location.pathname}
+    appCode={ICE_APP_CODE}
+    tenantId={userState.tenantId}
   >
     <Outlet />
   </CollectProviders>;
@@ -172,7 +205,7 @@ export default () => {
 [
   {
     "name": "menu",
-    "icon": "fa",
+    "icon": "icon-icon_xiaoxi3",
     "children": [
       {
         "name": "sub1",
