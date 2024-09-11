@@ -1,10 +1,10 @@
 [[- define "/web/src/util/index.ts" -]]
-
-import { TreeAction } from '@knockout-js/api';
+import { TreeAction } from '@knockout-js/api/ucenter';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ReactNode } from 'react';
+import menuJson from '../components/layout/menu.json';
 
 export type TreeDataState<T> = {
   key: string;
@@ -13,6 +13,8 @@ export type TreeDataState<T> = {
   parentId: string | number;
   node?: T;
 };
+
+export type OrderSort = 'ASC' | 'DESC';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -254,8 +256,16 @@ export const getTreeDropData = <T>(treeData: TreeDataState<T>[], dragInfo: any) 
 export const updateFormat = <T>(target: T, original: Record<string, any>) => {
   const ud: Record<string, any> = {};
   for (const key in target) {
-    const tValue = target[key];
-    if (tValue !== original[key]) {
+    let isChange = false;
+    const tValue = target[key], oValue = original[key];
+    if (typeof tValue === 'object' && typeof oValue === 'object') {
+      if (JSON.stringify(tValue) !== JSON.stringify(oValue)) {
+        isChange = true
+      }
+    } else if (tValue !== oValue) {
+      isChange = true
+    }
+    if (isChange) {
       ud[key] = tValue;
       if (typeof tValue != 'boolean' && !tValue) {
         const clearKey = `clear${firstUpper(key)}`.replace('ID', '');
@@ -266,5 +276,173 @@ export const updateFormat = <T>(target: T, original: Record<string, any>) => {
   return ud as T;
 };
 
+type MenuJsonData = {
+  name: string;
+  icon?: string;
+  children?: MenuJsonData[];
+  path?: string;
+}
+
+/**
+ * 开发的时候方便设置好权限信息
+ * @returns
+ */
+export const getMenuAppActions = (list?: MenuJsonData[]) => {
+  const initialAuth: Record<string, true> = {},
+    menuJsonList: MenuJsonData[] = list?.length ? list : menuJson;
+  if (process.env.NODE_ENV === 'development') {
+    menuJsonList?.forEach((item: MenuJsonData) => {
+      if (item.path) {
+        initialAuth[item.path] = true;
+      }
+      if (item.children) {
+        const childAuth = getMenuAppActions(item.children);
+        for (let key in childAuth) {
+          initialAuth[key] = true;
+        }
+      }
+    });
+  }
+  return initialAuth;
+}
+
+/**
+ * 新增或更新tree结构数据
+ * @param treeList
+ * @param updateData
+ * @param defaultKeys
+ */
+export const saveTreeData = <T extends { children?: T[] }>(
+  treeList: Array<T>,
+  updateData: T,
+  defaultKeys?: {
+    id?: string,
+    parentId?: string,
+    sort?: OrderSort,
+  }) => {
+  const keys = {
+    id: 'id', parentId: 'parentId', sort: 'ASC',
+    ...defaultKeys
+  }
+  const idx = treeList.findIndex(item => item[keys.id] === updateData[keys.id])
+  if (idx === -1) {
+    const pIdx = treeList.findIndex(item => item[keys.id] === updateData[keys.parentId])
+    if (updateData[keys.parentId] === treeList[0][keys.parentId]) {
+      // 属于这一层
+      if (keys.sort === 'ASC') {
+        treeList.push(updateData)
+      } else {
+        treeList.unshift(updateData)
+      }
+    } else {
+      if (pIdx === -1) {
+        // 继续在children寻找位置
+        for (let i = 0; i < treeList.length; i++) {
+          const childList = treeList[i].children;
+          if (childList) {
+            saveTreeData(childList, updateData, defaultKeys)
+          }
+        }
+      } else {
+        // 父节点在这一层
+        if (treeList[pIdx].children) {
+          if (keys.sort === 'ASC') {
+            treeList[pIdx].children.push(updateData)
+          } else {
+            treeList[pIdx].children.unshift(updateData)
+          }
+        } else {
+          treeList[pIdx].children = [updateData]
+        }
+      }
+    }
+  } else {
+    // 更新
+    treeList[idx] = updateData
+  }
+}
+
+
+/**
+ * 移除tree数据
+ * @param treeList
+ * @param id
+ * @param defaultKeys
+ */
+export const delTreeData = <T extends { children?: T[] }>(
+  treeList: Array<T>,
+  id: string,
+  defaultKeys?: {
+    id?: string,
+  }) => {
+  const keys = {
+    id: 'id',
+    ...defaultKeys
+  }
+  const idx = treeList.findIndex(item => item[keys.id] === id)
+  if (idx === -1) {
+    for (let i = 0; i < treeList.length; i++) {
+      const childList = treeList[i].children;
+      if (childList) {
+        delTreeData(childList, id, defaultKeys)
+      }
+    }
+  } else {
+    treeList.splice(idx, 1)
+  }
+}
+
+/**
+ * 创建或修改数据
+ * @param dataSource
+ * @param data
+ * @param defaultKeys
+ */
+export const saveDataSource = <T extends { id: string }>(
+  dataSource: Array<T>,
+  data: T,
+  defaultKeys?: {
+    id?: string,
+    sort?: OrderSort,
+  }) => {
+  const keys = {
+    id: 'id',
+    sort: 'DESC',
+    ...defaultKeys
+  }
+  const idx = dataSource.findIndex(item => item[keys.id] == data[keys.id])
+  if (idx === -1) {
+    switch (keys.sort) {
+      case 'ASC':
+        dataSource.push(data)
+        break;
+      case 'DESC':
+        dataSource.unshift(data)
+        break;
+      default:
+        dataSource.unshift(data)
+        break;
+    }
+  } else {
+    dataSource[idx] = data
+  }
+  return [...dataSource];
+}
+
+/**
+ * 根据id一移除数据
+ * @param dataSource
+ * @param id
+ * @param defaultKeys
+ */
+export const delDataSource = <T extends { id: string }>(dataSource: Array<T>, id: string, defaultKeys?: {
+  id?: string,
+}) => {
+  const keys = {
+    id: 'id',
+    ...defaultKeys
+  }
+  return dataSource.filter(item => item[keys.id] != id)
+}
 
 [[- end -]]

@@ -1,3 +1,8 @@
+[[- define "web/.browserslistrc" -]]
+defaults
+
+[[- end -]]
+
 [[- define "web/.editorconfig" -]]
 # http://editorconfig.org
 root = true
@@ -101,6 +106,15 @@ module.exports = getStylelintConfig('react');
 # 应用appCode
 ICE_APP_CODE=[[ pkgName $.Package]]
 
+# 二级路由目录配置
+ICE_ROUTER_BASENAME=/
+
+# 部署应用的配置oss地址
+ICE_APP_DEPLOY_CONFIG=
+
+# http签名 可以设置为ko不是ko就使用默认签名方式
+ICE_HTTP_SIGN=
+
 # token
 ICE_DEV_TOKEN=
 
@@ -112,14 +126,13 @@ ICE_LOGIN_URL=/login
 
 # ice proxy target
 ICE_PROXY_ADMINX=http://127.0.0.1:8080/
-ICE_PROXY_FILES=http://127.0.0.1:10071/
 ICE_PROXY_AUTH=http://127.0.0.1:10070/
 ICE_PROXY_MAIN=http://127.0.0.1:10072/
 
 # api前缀
 ICE_API_ADMINX_PREFIX=/api-adminx
 ICE_API_AUTH_PREFIX=/api-auth
-ICE_API_FILES_PREFIX=/api-files
+ICE_API_FILES_PREFIX=/api-s3
 ICE_API_MAIN_PREFIX=/api-main
 
 # gql api完整地址
@@ -133,6 +146,9 @@ ICE_DEV_PUBLIC_PATH=/
 # 微前端打包时候使用配置与具体部署位置有关
 ICE_BUILD_PUBLIC_PATH=/
 
+#gqlgen专用 adminx项目schema地址
+GQLGEN_SCHEMA_ADMINX=http://127.0.0.1:8080/graphql/query
+
 [[- end -]]
 
 [[- define "web/.env.local" -]]
@@ -141,11 +157,10 @@ PORT=3002
 
 # mock user token and tenantId
 ICE_DEV_TOKEN=
-ICE_DEV_TENANT_ID=
+ICE_DEV_TID=
 
 # mock
-ICE_PROXY_ADMINX=http://127.0.0.1:3002//mock-api-adminx/
-ICE_PROXY_FILES=http://127.0.0.1:3002/mock-api-files/
+ICE_PROXY_ADMINX=http://127.0.0.1:3002/mock-api-adminx/
 ICE_PROXY_AUTH=http://127.0.0.1:3002/mock-api-auth/
 ICE_PROXY_MAIN=http://127.0.0.1:3002/mock-api-main/
 
