@@ -1,5 +1,5 @@
 [[/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */]]
-[[ define "web/src/components/Layout/index.tsx" ]]
+[[ define "web/src/components/layout/index.tsx" ]]
 import store from '@/store';
 import { useEffect, useState } from 'react';
 import menuList from '@/components/layout/menu.json';
@@ -169,7 +169,7 @@ export default () => {
 
 [[ end ]]
 
-[[ define "web/src/components/Layout/stark.tsx" ]]
+[[ define "web/src/components/layout/stark.tsx" ]]
 import i18n from "@/i18n";
 import store from "@/store";
 import { Outlet, useLocation } from "@ice/runtime"
@@ -200,7 +200,7 @@ export default () => {
 
 [[ end ]]
 
-[[- define "web/src/components/Layout/menu.json" -]]
+[[- define "web/src/components/layout/menu.json" -]]
 [[- $pkg := pkgName .Package -]]
 [
   {

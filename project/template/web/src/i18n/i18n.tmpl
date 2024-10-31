@@ -1,8 +1,8 @@
 [[ define "/web/src/i18n/index.ts" ]]
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import enUS from './locales/en-US';
-import zhCN from './locales/zh-CN';
+import enUS from './locales/en-us';
+import zhCN from './locales/zh-cn';
 import { LocaleType } from '@knockout-js/layout';
 
 const resources = {
@@ -24,7 +24,7 @@ export default i18n;
 
 [[ end ]]
 
-[[ define "/web/src/i18n/locales/en-US.ts" ]]
+[[ define "/web/src/i18n/locales/en-us.ts" ]]
 export default {
   translation: {
     'hello': 'hello',
@@ -32,7 +32,7 @@ export default {
 };
 [[ end ]]
 
-[[ define "/web/src/i18n/locales/zh-CN.ts" ]]
+[[ define "/web/src/i18n/locales/zh-cn.ts" ]]
 export default {
   translation: {
     'hello': '你好',
