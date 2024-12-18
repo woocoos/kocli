@@ -1,0 +1,85 @@
+{{/* gotype: github.com/tsingsun/woocoo/cmd/woco/project.Graph */}}
+
+{{ define "api/graphql/resolver_test" }}
+package graphql
+import(
+	"context"
+	"entgo.io/ent/dialect/sql/schema"
+    "github.com/99designs/gqlgen/client"
+    "github.com/golang-jwt/jwt/v5"
+    "github.com/stretchr/testify/suite"
+    "github.com/tsingsun/woocoo"
+    "github.com/tsingsun/woocoo/pkg/conf"
+	"github.com/tsingsun/woocoo/contrib/gql"
+	"github.com/tsingsun/woocoo/pkg/security"
+    "github.com/woocoos/knockout-go/pkg/identity"
+	"github.com/woocoos/knockout-go/pkg/koapp"
+	"testing"
+    "{{ .Config.Package }}/ent"
+
+	_ "github.com/mattn/go-sqlite3"
+    _ "{{ .Config.Package }}/ent/runtime"
+)
+
+const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJncnBjIiwibmFtZSI6ImdycGMiLCJpYXQiOjE5MTYyMzkwMjJ9.m7ejm9Q3Ehfy-oNwla5_X0-zfm3YJCnjZv03R1ZwJk8"
+
+type testSuite struct {
+	suite.Suite
+	app           *woocoo.App
+	server        *Server
+	queryResolver *queryResolver
+}
+
+func TestSuite(t *testing.T) {
+	suite.Run(t, new(testSuite))
+}
+
+func (t *testSuite) SetupSuite() {
+	var err error
+	t.app = koapp.New(woocoo.WithAppConfiguration(conf.New(conf.WithBaseDir("testdata"), conf.WithGlobal(true)).Load()))
+
+	t.server, err = NewServer(t.app)
+	if err != nil {
+		panic(err)
+	}
+
+	t.initDatabase(t.newTestCtx(), t.server.db)
+
+	t.queryResolver = t.server.resolver.Query().(*queryResolver)
+
+	t.app.RegisterServer(t.server)
+	go func() {
+		if err := t.app.Run(); err != nil {
+			panic(err)
+		}
+	}()
+}
+
+func (t *testSuite) TearDownSuite() {
+	t.app.Stop()
+}
+
+func (t *testSuite) initDatabase(ctx context.Context, client *ent.Client) {
+    ctx = identity.WithTenantID(ctx, 1)
+	err := client.Schema.Create(ctx, schema.WithForeignKeys(false))
+	t.Require().NoError(err)
+}
+
+func (t *testSuite) newTestCtx() context.Context {
+	ctx := ent.NewContext(context.Background(), t.server.db)
+	// with identity
+	ctx = security.WithContext(ctx, security.NewGenericPrincipalByClaims(jwt.MapClaims{"sub": "1"}))
+	ctx = identity.WithTenantID(ctx, 1)
+	return ctx
+}
+
+func (t *testSuite) gqlClient() *client.Client {
+	c := client.New(t.server.webSrv.Router(), func(bd *client.Request) {
+		bd.HTTP.URL.Path = "/query"
+		bd.HTTP.Header.Set(identity.TenantHeaderKey, "1")
+		bd.HTTP.Header.Set("Authorization", "Bearer "+Token)
+	})
+	return c
+}
+
+{{ end }}

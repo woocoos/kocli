@@ -16,10 +16,12 @@ import(
 type Server struct {
 	db        *ent.Client
 	webSrv       *web.Server
+	gqlSrv   *handler.Server
+	resolver *Resolver
     kosdk        *api.SDK
 }
 
-func NewServer(app *woocoo.App) *Server {
+func NewServer(app *woocoo.App) (*Server,error) {
 	s := &Server{}
 	cnf := app.AppConfiguration()
 	ents := koapp.BuildEntComponents(cnf)
@@ -40,7 +42,7 @@ func NewServer(app *woocoo.App) *Server {
 
 	app.RegisterServer(s.webSrv)
 
-	return s
+	return s, nil
 }
 
 func (s *Server) Start(ctx context.Context) error {
@@ -62,13 +64,13 @@ func (s *Server) buildWebEngine(app *woocoo.App) {
 		middleware.RegisterTenantID(),
 		middleware.RegisterTokenSigner(),
 	)
-
-	gqlSrv := handler.NewDefaultServer(NewSchema(WithEntClient(s.db)))
-	gqlSrv.AroundResponses(middleware.SimplePagination())
+	s.resolver = NewResolver(WithEntClient(s.db))
+	s.gqlSrv = handler.NewDefaultServer(NewSchema(s.resolver))
+	s.gqlSrv.AroundResponses(middleware.SimplePagination())
 	// mutation transaction
-	gqlSrv.Use(entgql.Transactioner{TxOpener: s.db})
+    s.gqlSrv.Use(entgql.Transactioner{TxOpener: s.db})
 
-	if err := gql.RegisterGraphqlServer(s.webSrv, gqlSrv); err != nil {
+    if err := gql.RegisterGraphqlServer(s.webSrv, s.gqlSrv); err != nil {
 		panic(err)
 	}
 }

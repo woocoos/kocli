@@ -25,6 +25,7 @@ go run github.com/woocoos/kocli/script/initproject/main.go --package github.com/
 in codegen directory, scripts use `//go:build ignore` to keep ent generate run correctly, 
 it can ignore build failure when your code is not ready and has some errors.
 
+if the package tail name contains `-`, will be renamed `_`.
 ### application data
 
 #### resource

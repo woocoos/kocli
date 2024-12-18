@@ -16,7 +16,7 @@ var _ gen.Extension = (*Extension)(nil)
 
 var (
 	mainT = gen.ParseT("entry", templateDir, ExtensionFuncs,
-		"template/main.tmpl", "template/graphql.tmpl")
+		"template/main.tmpl", "template/graphql.tmpl", "template/resolver_test.tmpl")
 )
 
 type Option func(*Extension)

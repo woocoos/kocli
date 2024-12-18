@@ -1,22 +1,20 @@
 module github.com/woocoos/kocli/integration
 
-go 1.22.5
-
-toolchain go1.23.0
+go 1.23.0
 
 require (
 	entgo.io/contrib v0.6.0
-	entgo.io/ent v0.14.0
-	github.com/99designs/gqlgen v0.17.48
+	entgo.io/ent v0.14.1
+	github.com/99designs/gqlgen v0.17.56
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.9.0
-	github.com/vektah/gqlparser/v2 v2.5.12
+	github.com/vektah/gqlparser/v2 v2.5.19
 	github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5
 	github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb
-	github.com/woocoos/knockout-go v0.0.0-20240831084203-f75e619750a2
+	github.com/woocoos/knockout-go v0.0.0-20241218043333-aa96604d7721
 	github.com/woocoos/kocli v0.0.0-00010101000000-000000000000
-	golang.org/x/sync v0.7.0
+	golang.org/x/sync v0.10.0
 )
 
 require (
@@ -29,7 +27,7 @@ require (
 	github.com/bufbuild/protocompile v0.6.0 // indirect
 	github.com/bwmarrin/snowflake v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
@@ -46,9 +44,9 @@ require (
 	github.com/knadh/koanf/maps v0.1.1 // indirect
 	github.com/knadh/koanf/parsers/yaml v0.1.0 // indirect
 	github.com/knadh/koanf/providers/confmap v0.1.0 // indirect
-	github.com/knadh/koanf/providers/file v0.1.0 // indirect
+	github.com/knadh/koanf/providers/file v1.1.2 // indirect
 	github.com/knadh/koanf/providers/rawbytes v0.1.0 // indirect
-	github.com/knadh/koanf/v2 v2.0.1 // indirect
+	github.com/knadh/koanf/v2 v2.1.2 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
@@ -58,21 +56,21 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
-	github.com/tsingsun/woocoo v0.4.4-0.20240813074317-94b44e6fba47 // indirect
-	github.com/urfave/cli/v2 v2.27.2 // indirect
+	github.com/tsingsun/woocoo v0.5.2 // indirect
+	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/tools v0.24.0 // indirect
+	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
