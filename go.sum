@@ -171,6 +171,7 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
+github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
 github.com/tsingsun/woocoo v0.5.2 h1:uT8CdfqLVSR7owgp7iM5usSJZpVY68eJtD9ianyEQOI=
 github.com/tsingsun/woocoo v0.5.2/go.mod h1:rWMFH0xHquJU8VHfVw5uy/RM+2vEhVchvHl1r9HC7ss=
 github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5 h1:r7m5wvuYSk7wh9Z+jWkWFotJVq4WCvZVmt82jjMPWxM=
@@ -193,10 +194,14 @@ github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2 h1:mfLV
 github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2/go.mod h1:v6b9mWRshfwNfMFZeC/zWUyVDZpD7OLPlUPQHFADa2c=
 github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5 h1:3RS4BJyTW6xnvRF30nZUQsp0eMbzpfUsMjvhtmvKmzs=
 github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
+github.com/woocoos/entcache v0.1.0/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
 github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb h1:zz6bac/vW5hLJjVlTiDRqx3CBGunvjZQ83brND0GIdE=
 github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb/go.mod h1:wLqUtctiQ86KlIvH8G3fE7FCSb3hhfJj+ohofNlqEjM=
+github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d h1:3R/1n5AYVPfl0wLMIi14wcgF7yzNSB48hG7v7Va5EnQ=
+github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d/go.mod h1:Eh3enbqJWZoMqYAJWe9zSWQ5HeW5nt1EPUpNxgZlMXE=
 github.com/woocoos/knockout-go v0.0.0-20241218043333-aa96604d7721 h1:0jVajhzKoJtQQnrlm051goLYdkw0iF7/kC9XtQyPf8c=
 github.com/woocoos/knockout-go v0.0.0-20241218043333-aa96604d7721/go.mod h1:xycGYTVQ+3a9fWf4aKhaTkr5zgmM3HXaBT7Agx7/E6M=
+github.com/woocoos/knockout-go v0.0.0-20241221073530-2c42238f6e39/go.mod h1:xycGYTVQ+3a9fWf4aKhaTkr5zgmM3HXaBT7Agx7/E6M=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 h1:gEOO8jv9F4OT7lGCjxCBTO/36wtF6j2nSip77qHd4x4=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1/go.mod h1:Ohn+xnUBiLI6FVj/9LpzZWtj1/D6lUovWYBkxHVV3aM=
 github.com/yuin/gopher-lua v1.1.1 h1:kYKnWBjvbNP4XLT3+bPEwAXJx262OhaHDWDVOPjL46M=

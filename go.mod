@@ -8,12 +8,12 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/tsingsun/woocoo v0.5.2
 	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5
 	github.com/urfave/cli/v2 v2.27.5
-	github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb
-	github.com/woocoos/knockout-go v0.0.0-20241218043333-aa96604d7721
+	github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d
+	github.com/woocoos/knockout-go v0.0.0-20241221073530-2c42238f6e39
 )
 
 require google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
@@ -64,7 +64,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5 // indirect
+	github.com/woocoos/entcache v0.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
