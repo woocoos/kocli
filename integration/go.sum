@@ -168,6 +168,7 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
+github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
 github.com/tsingsun/woocoo v0.4.4-0.20240813074317-94b44e6fba47 h1:UmA4UFhjbDmAyRrWcDh4Ktw0DT8L4snDZ4GlcRdE/zo=
 github.com/tsingsun/woocoo v0.4.4-0.20240813074317-94b44e6fba47/go.mod h1:5e23SW2b7Bz4CmnBhBlT9R4vzHjrNkGE8F6CKOagVP8=
 github.com/tsingsun/woocoo v0.5.2/go.mod h1:rWMFH0xHquJU8VHfVw5uy/RM+2vEhVchvHl1r9HC7ss=
@@ -191,8 +192,10 @@ github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2 h1:mfLV
 github.com/woocoos/casbin-ent-adapter v0.0.0-20230511021958-49eb39a7aea2/go.mod h1:v6b9mWRshfwNfMFZeC/zWUyVDZpD7OLPlUPQHFADa2c=
 github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5 h1:3RS4BJyTW6xnvRF30nZUQsp0eMbzpfUsMjvhtmvKmzs=
 github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
+github.com/woocoos/entcache v0.1.0/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
 github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb h1:zz6bac/vW5hLJjVlTiDRqx3CBGunvjZQ83brND0GIdE=
 github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb/go.mod h1:wLqUtctiQ86KlIvH8G3fE7FCSb3hhfJj+ohofNlqEjM=
+github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d/go.mod h1:Eh3enbqJWZoMqYAJWe9zSWQ5HeW5nt1EPUpNxgZlMXE=
 github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 h1:+qGGcbkzsfDQNPPe9UDgpxAWQrhbbBXOYJFQDq/dtJw=
 github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913/go.mod h1:4aEEwZQutDLsQv2Deui4iYQ6DWTxR14g6m8Wv88+Xqk=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1/go.mod h1:Ohn+xnUBiLI6FVj/9LpzZWtj1/D6lUovWYBkxHVV3aM=

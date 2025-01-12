@@ -13,7 +13,7 @@ require (
 	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5
 	github.com/urfave/cli/v2 v2.27.5
 	github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d
-	github.com/woocoos/knockout-go v0.0.0-20241221073530-2c42238f6e39
+	github.com/woocoos/knockout-go v0.0.2-0.20250112111428-9f6638b1b657
 )
 
 require google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect

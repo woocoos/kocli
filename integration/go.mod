@@ -8,11 +8,11 @@ require (
 	github.com/99designs/gqlgen v0.17.56
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.19
-	github.com/woocoos/entcache v0.0.0-20231206055445-856f0148efa5
-	github.com/woocoos/knockout v0.0.0-20240831090737-367fb81a7efb
-	github.com/woocoos/knockout-go v0.0.0-20241218043333-aa96604d7721
+	github.com/woocoos/entcache v0.1.0
+	github.com/woocoos/knockout v0.0.0-20241225071151-35a195d9ba2d
+	github.com/woocoos/knockout-go v0.0.2-0.20250112111428-9f6638b1b657
 	github.com/woocoos/kocli v0.0.0-00010101000000-000000000000
 	golang.org/x/sync v0.10.0
 )
