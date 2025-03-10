@@ -38,15 +38,13 @@ func NewServer(app *woocoo.App) (*Server,error) {
 		panic(err)
 	}
 
-	s.buildWebEngine(app)
-
-	app.RegisterServer(s.webSrv)
+	s.buildWebEngine(cnf)
 
 	return s, nil
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	return nil
+    return s.webSrv.Start(ctx)
 }
 
 func (s *Server) Stop(ctx context.Context) error {
@@ -54,8 +52,7 @@ func (s *Server) Stop(ctx context.Context) error {
 	return nil
 }
 
-func (s *Server) buildWebEngine(app *woocoo.App) {
-	cnf := app.AppConfiguration()
+func (s *Server) buildWebEngine(cnf *conf.AppConfiguration) {
 	s.webSrv = web.New(web.WithConfiguration(cnf.Sub("web")),
 		web.WithGracefulStop(),
 		gql.RegisterMiddleware(),
@@ -64,14 +61,14 @@ func (s *Server) buildWebEngine(app *woocoo.App) {
 		middleware.RegisterTenantID(),
 		middleware.RegisterTokenSigner(),
 	)
-	s.resolver = NewResolver(WithEntClient(s.db))
-	s.gqlSrv = handler.NewDefaultServer(NewSchema(s.resolver))
-	s.gqlSrv.AroundResponses(middleware.SimplePagination())
-	// mutation transaction
+    s.resolver = NewResolver(WithEntClient(s.db))
+    ss,err := gql.RegisterSchema(s.webSrv, NewSchema(s.resolver))
+    if err != nil {
+        panic(err)
+    }
+    s.gqlSrv = ss[0]
+    s.gqlSrv.AroundResponses(middleware.SimplePagination())
+    // mutation transaction
     s.gqlSrv.Use(entgql.Transactioner{TxOpener: s.db})
-
-    if err := gql.RegisterGraphqlServer(s.webSrv, s.gqlSrv); err != nil {
-		panic(err)
-	}
 }
 {{ end }}

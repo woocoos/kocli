@@ -18,7 +18,10 @@ import(
 func main(){
     app := koapp.New()
 
-    rmsSvr := graphql.NewServer(app)
+    rmsSvr,err := graphql.NewServer(app)
+    if err != nil {
+		panic(err)
+	}
 
 	app.RegisterServer(rmsSvr, clientx.ChangeSet)
 	if err := app.Run(); err != nil {
