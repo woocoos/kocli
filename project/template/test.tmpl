@@ -21,6 +21,7 @@ var (
 )
 
 func main() {
+    flag.Parse()
 	client, err := ent.Open(*name, *dsn)
 	if err != nil {
 		log.Fatalf("failed connecting to mysql: %v", err)

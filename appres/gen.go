@@ -8,7 +8,7 @@ import (
 	"entgo.io/ent/entc/load"
 	"fmt"
 	"github.com/99designs/gqlgen/codegen/config"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/tsingsun/woocoo"
 	"github.com/tsingsun/woocoo/pkg/conf"
 	"github.com/woocoos/knockout-go/ent/clientx"
