@@ -36,14 +36,15 @@ func TestSuite(t *testing.T) {
 
 func (t *testSuite) SetupSuite() {
 	var err error
-	t.app = koapp.New(woocoo.WithAppConfiguration(conf.New(conf.WithBaseDir("testdata"), conf.WithGlobal(true)).Load()))
-
-	t.server, err = NewServer(t.app)
-	if err != nil {
+	t.app = koapp.New(woocoo.WithAppConfiguration(conf.New(conf.WithBaseDir("testdata")).Load()))
+    so := ServerOption{
+        DB: enttest.Open(t.T(), "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1"),
+    }
+	if t.server, err = NewServer(t.app,so);err!=nil {
 		panic(err)
 	}
 
-	t.initDatabase(t.newTestCtx(), t.server.db)
+	t.initDatabase(t.newTestCtx(), t.server.DB)
 
 	t.queryResolver = t.server.resolver.Query().(*queryResolver)
 
@@ -66,7 +67,7 @@ func (t *testSuite) initDatabase(ctx context.Context, client *ent.Client) {
 }
 
 func (t *testSuite) newTestCtx() context.Context {
-	ctx := ent.NewContext(context.Background(), t.server.db)
+	ctx := ent.NewContext(context.Background(), t.server.DB)
 	// with identity
 	ctx = security.WithContext(ctx, security.NewGenericPrincipalByClaims(jwt.MapClaims{"sub": "1"}))
 	ctx = identity.WithTenantID(ctx, 1)

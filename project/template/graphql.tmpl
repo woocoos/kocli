@@ -13,33 +13,26 @@ import(
 	"github.com/woocoos/knockout-go/api"
 )
 
+type ServerOption struct {
+	DB    *ent.Client
+	KOSDK *api.SDK
+}
+
 type Server struct {
-	db        *ent.Client
+    ServerOption
 	webSrv       *web.Server
 	gqlSrv   *handler.Server
 	resolver *Resolver
-    kosdk        *api.SDK
 }
 
-func NewServer(app *woocoo.App) (*Server,error) {
-	s := &Server{}
+func NewServer(app *woocoo.App, option ServerOption) (s *Server, err error) {
+	s = &Server{
+		ServerOption: option,
+	}
 	cnf := app.AppConfiguration()
-	ents := koapp.BuildEntComponents(cnf)
-	drv := ents["{{ pkgName $.Package }}"]
-	if cnf.Development {
-		s.db = ent.NewClient(ent.Driver(drv), ent.Debug())
-	} else {
-		s.db = ent.NewClient(ent.Driver(drv))
-	}
-
-	var err error
-	s.kosdk, err = api.NewSDK(cnf.Sub("kosdk"))
-	if err != nil {
-		panic(err)
-	}
-
-	s.buildWebEngine(cnf)
-
+    if cnf.IsSet("web") {
+        s.buildWebEngine(cnf)
+    }
 	return s, nil
 }
 
@@ -48,7 +41,6 @@ func (s *Server) Start(ctx context.Context) error {
 }
 
 func (s *Server) Stop(ctx context.Context) error {
-	s.db.Close()
 	return nil
 }
 
@@ -61,7 +53,7 @@ func (s *Server) buildWebEngine(cnf *conf.AppConfiguration) {
 		middleware.RegisterTenantID(),
 		middleware.RegisterTokenSigner(),
 	)
-    s.resolver = NewResolver(WithEntClient(s.db))
+    s.resolver = NewResolver(WithEntClient(s.DB))
     ss,err := gql.RegisterSchema(s.webSrv, NewSchema(s.resolver))
     if err != nil {
         panic(err)
@@ -69,6 +61,6 @@ func (s *Server) buildWebEngine(cnf *conf.AppConfiguration) {
     s.gqlSrv = ss[0]
     s.gqlSrv.AroundResponses(middleware.SimplePagination())
     // mutation transaction
-    s.gqlSrv.Use(entgql.Transactioner{TxOpener: s.db})
+    s.gqlSrv.Use(entgql.Transactioner{TxOpener: s.DB})
 }
 {{ end }}

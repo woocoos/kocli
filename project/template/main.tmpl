@@ -16,15 +16,34 @@ import(
 )
 
 func main(){
-    app := koapp.New()
+var err error
+	app := koapp.New()
+	cnf := app.AppConfiguration()
 
-    rmsSvr,err := graphql.NewServer(app)
-    if err != nil {
+	ents := koapp.BuildEntComponents(cnf)
+	drv := ents["{{ pkgName $.Package }}"]
+	db := ent.NewClient(ent.Driver(drv))
+	if cnf.Development {
+		db = db.Debug()
+	}
+	defer db.Close()
+
+	so := graphql.ServerOption{
+		DB: db,
+	}
+	if cnf.IsSet("kosdk") {
+		if so.KOSDK, err = api.NewSDK(cnf.Sub("kosdk")); err != nil {
+			panic(err)
+		}
+	}
+
+	rmsSvr, err := graphql.NewServer(app, so)
+	if err != nil {
 		panic(err)
 	}
 
 	app.RegisterServer(rmsSvr, clientx.ChangeSet)
-	if err := app.Run(); err != nil {
+	if err = app.Run(); err != nil {
 		panic(err)
 	}
 }

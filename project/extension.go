@@ -15,6 +15,7 @@ import (
 var _ gen.Extension = (*Extension)(nil)
 
 var (
+	// 模板目前只处理go类型的文件
 	mainT = gen.ParseT("entry", templateDir, ExtensionFuncs,
 		"template/main.tmpl", "template/graphql.tmpl", "template/resolver_test.tmpl")
 )

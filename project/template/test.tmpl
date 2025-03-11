@@ -16,7 +16,7 @@ import (
 
 // receive two arguments: the migration name and the database dsn.
 var (
-	dsn  = flag.String("dsn", "root:@tcp(localhost:3306)/{{ .Config.Package }}", "")
+	dsn  = flag.String("dsn", "root:@tcp(localhost:3306)/{{ pkgName $.Package }}", "")
 	name = flag.String("name", "mysql", "driver name")
 )
 
@@ -96,4 +96,25 @@ func Tmp(rel string) string {
 	return filepath.Join(tmpPath, rel)
 }
 
+{{ end }}
+
+
+{{ define "api/graphql/testdata/etc/app.yaml" }}
+jwt: &jwt
+  signingMethod: "HS256"
+  signingKey: "secret"
+
+web:
+  server:
+    addr: 127.0.0.1:0
+  engine:
+    routerGroups:
+      - default:
+          middlewares:
+            - tenant:
+            - jwt: *jwt
+            - graphql:
+                withAuthorization: false
+                appCode: "{{ pkgName $.Package }}"
+                middlewares:
 {{ end }}
