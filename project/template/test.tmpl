@@ -52,7 +52,12 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"github.com/golang-jwt/jwt/v5"
+    "github.com/tsingsun/woocoo/pkg/security"
+    "github.com/woocoos/knockout-go/pkg/identity"
 )
+
+const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiIxIiwiaWF0IjoxOTQyMjY5NDQ0fQ.X4E177vMh2t0whYqL0WuHgU7NqzTuBdKfIXrwA-bKwQ"
 
 // basedir is the root directory of this package.
 var (
@@ -94,6 +99,15 @@ func Tmp(rel string) string {
 		panic(err)
 	}
 	return filepath.Join(tmpPath, rel)
+}
+
+// Ctx returns a context with identity. UserId is 1 and tenantId is 1.
+func Ctx() context.Context {
+	ctx := context.Background()
+	// with identity
+	ctx = security.WithContext(ctx, security.NewGenericPrincipalByClaims(jwt.MapClaims{"sub": "1"}))
+	ctx = identity.WithTenantID(ctx, 1)
+	return ctx
 }
 
 {{ end }}

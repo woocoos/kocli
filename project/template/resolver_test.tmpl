@@ -16,12 +16,11 @@ import(
 	"github.com/woocoos/knockout-go/pkg/koapp"
 	"testing"
     "{{ .Config.Package }}/ent"
+    "{{ .Config.Package }}/test"
 
 	_ "github.com/mattn/go-sqlite3"
     _ "{{ .Config.Package }}/ent/runtime"
 )
-
-const Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJncnBjIiwibmFtZSI6ImdycGMiLCJpYXQiOjE5MTYyMzkwMjJ9.m7ejm9Q3Ehfy-oNwla5_X0-zfm3YJCnjZv03R1ZwJk8"
 
 type testSuite struct {
 	suite.Suite
@@ -67,10 +66,7 @@ func (t *testSuite) initDatabase(ctx context.Context, client *ent.Client) {
 }
 
 func (t *testSuite) newTestCtx() context.Context {
-	ctx := ent.NewContext(context.Background(), t.server.DB)
-	// with identity
-	ctx = security.WithContext(ctx, security.NewGenericPrincipalByClaims(jwt.MapClaims{"sub": "1"}))
-	ctx = identity.WithTenantID(ctx, 1)
+	ctx := ent.NewContext(test.Ctx(), t.server.DB)
 	return ctx
 }
 
@@ -78,7 +74,7 @@ func (t *testSuite) gqlClient() *client.Client {
 	c := client.New(t.server.webSrv.Router(), func(bd *client.Request) {
 		bd.HTTP.URL.Path = "/query"
 		bd.HTTP.Header.Set(identity.TenantHeaderKey, "1")
-		bd.HTTP.Header.Set("Authorization", "Bearer "+Token)
+		bd.HTTP.Header.Set("Authorization", "Bearer "+test.Token)
 	})
 	return c
 }
