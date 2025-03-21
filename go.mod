@@ -9,11 +9,11 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.2.1
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.10.0
-	github.com/tsingsun/woocoo v0.5.5
+	github.com/tsingsun/woocoo v0.5.6
 	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5
 	github.com/urfave/cli/v2 v2.27.5
 	github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47
-	github.com/woocoos/knockout-go v0.2.0
+	github.com/woocoos/knockout-go v0.3.1
 )
 
 require google.golang.org/genproto/googleapis/rpc v0.0.0-20241209162323-e6fa225c2576 // indirect
@@ -34,7 +34,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect

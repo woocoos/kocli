@@ -79,8 +79,8 @@ github.com/go-viper/mapstructure/v2 v2.2.1 h1:ZAaOCxANMuZx5RCeg0mBdEZk7DZasvvZIx
 github.com/go-viper/mapstructure/v2 v2.2.1/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/goccy/go-json v0.10.4 h1:JSwxQzIqKfmFX1swYPpUThQZp/Ka4wzJdK0LWVytLPM=
 github.com/goccy/go-json v0.10.4/go.mod h1:oq7eo15ShAhp70Anwd5lgX2pLfOS3QCiwU/PULtXL6M=
-github.com/golang-jwt/jwt/v5 v5.2.1 h1:OuVbFODueb089Lh128TAcimifWaLhJwVflnrgM17wHk=
-github.com/golang-jwt/jwt/v5 v5.2.1/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
+github.com/golang-jwt/jwt/v5 v5.2.2 h1:Rl4B7itRWVtYIHFrSNd7vhTiz9UpLdi6gZhZ3wEeDy8=
+github.com/golang-jwt/jwt/v5 v5.2.2/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
 github.com/golang/protobuf v1.5.4 h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=
 github.com/golang/protobuf v1.5.4/go.mod h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
@@ -173,8 +173,8 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/tsingsun/woocoo v0.5.5 h1:1RIbxyl4ZXkXbTQtc10M0v2WzpyiS5Y2Tksu6q1Gu6Q=
-github.com/tsingsun/woocoo v0.5.5/go.mod h1:hRGlaEsYOt4kY/XpPIis9T2DD0l9QpOH2alhWvK3FLM=
+github.com/tsingsun/woocoo v0.5.6 h1:cECutpEwR0VBk7pSNcbYfbDunPgRKpXU5NzSq2iFRQE=
+github.com/tsingsun/woocoo v0.5.6/go.mod h1:tkhnofsWAdguYrpNb6n+10OqxkFWgrmv/PEpQzL/rKQ=
 github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5 h1:r7m5wvuYSk7wh9Z+jWkWFotJVq4WCvZVmt82jjMPWxM=
 github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5/go.mod h1:RKLksQ6a3DjNvyYccJXWRaA9Tyu08KmSF/gN1TQ07Nw=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
@@ -195,8 +195,8 @@ github.com/woocoos/entcache v0.3.0 h1:UzIy86c7Y4Sd4alomhkP/zdD+nePj6OWa2mvPD5hMh
 github.com/woocoos/entcache v0.3.0/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
 github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47 h1:25S5mtK0s0lIcZFX3o/qMEG+s7Ru89YY+/lGUH837FY=
 github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47/go.mod h1:nbMaL/yO2VOX4p+z1QxaYxgnEVbDoT1tlNiAsRYpsLk=
-github.com/woocoos/knockout-go v0.2.0 h1:UJq6lyeI9fJZsHPGGknoXzT20EgzFu3Z/DLCqx60ImI=
-github.com/woocoos/knockout-go v0.2.0/go.mod h1:MgpS1e2/5QT3FGRUCrSaIg4RIFbEBbXaJcaeWb2xsMU=
+github.com/woocoos/knockout-go v0.3.1 h1:/M9LvtX42XfyMn1o4GjGgDZfn3PLTjxSKNQxQw8pxEA=
+github.com/woocoos/knockout-go v0.3.1/go.mod h1:I9BhRCGwIYz1qaJi/KVQ16wBaJ0hN1H5pKBx6tf65fU=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 h1:gEOO8jv9F4OT7lGCjxCBTO/36wtF6j2nSip77qHd4x4=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1/go.mod h1:Ohn+xnUBiLI6FVj/9LpzZWtj1/D6lUovWYBkxHVV3aM=
 github.com/yuin/gopher-lua v1.1.1 h1:kYKnWBjvbNP4XLT3+bPEwAXJx262OhaHDWDVOPjL46M=

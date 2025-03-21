@@ -35,12 +35,18 @@ var enumCMD = &cli.Command{
 			Aliases:  []string{"v"},
 			Required: true,
 		},
+		&cli.BoolFlag{
+			Name:    "namedValues",
+			Usage:   "is named values",
+			Aliases: []string{"i"},
+		},
 	},
 	Action: func(c *cli.Context) error {
 		return GenerateEnum(EnumInput{
-			BaseType: c.String("baseType"),
-			EnumName: c.String("name"),
-			Values:   c.StringSlice("values"),
+			BaseType:      c.String("baseType"),
+			EnumName:      c.String("name"),
+			InputValues:   c.StringSlice("values"),
+			IsNamedValues: c.Bool("namedValues"),
 		})
 	},
 }

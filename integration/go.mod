@@ -12,7 +12,7 @@ require (
 	github.com/vektah/gqlparser/v2 v2.5.19
 	github.com/woocoos/entcache v0.3.0
 	github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47
-	github.com/woocoos/knockout-go v0.2.0
+	github.com/woocoos/knockout-go v0.3.1
 	github.com/woocoos/kocli v0.0.0-00010101000000-000000000000
 	golang.org/x/sync v0.11.0
 )
@@ -34,7 +34,7 @@ require (
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -58,7 +58,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
-	github.com/tsingsun/woocoo v0.5.5 // indirect
+	github.com/tsingsun/woocoo v0.5.6 // indirect
 	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect

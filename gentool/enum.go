@@ -2,25 +2,30 @@ package gentool
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/tsingsun/woocoo/cmd/woco/gen"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
 // EnumInput represents the input for generating an enum.
 type EnumInput struct {
-	targetDir string
-	BaseType  string
-	EnumName  string
-	Values    []string
+	targetDir     string
+	BaseType      string
+	EnumName      string
+	InputValues   []string
+	IsNamedValues bool
+	Names         []string // 添加Names字段
+	Values        []string // 添加ValuesSlice字段
 }
 
 // GenerateEnum generates the enum code based on the provided input.
 func GenerateEnum(input EnumInput) error {
-	if input.targetDir == "" {
-		input.targetDir = filepath.Join("codegen", "entgen", "types")
+	if err := enumInput(&input); err != nil {
+		return err
 	}
 	// Define the template
 	tmpls := gen.ParseT("template/enum.tmpl", templateDir, gen.Funcs, "template/enum.tmpl")
@@ -42,6 +47,41 @@ func GenerateEnum(input EnumInput) error {
 		}
 		if err := gen.FormatGoFile(outputPath, b.Bytes()); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+func enumInput(input *EnumInput) error {
+	if input.targetDir == "" {
+		input.targetDir = filepath.Join("codegen", "entgen", "types")
+	}
+	input.Names = make([]string, 0)
+	input.Values = make([]string, 0)
+	if input.IsNamedValues {
+		tv := input.InputValues
+		if len(tv)%2 != 0 {
+			return errors.New("values length must be even")
+		}
+		for i := 0; i < len(tv); i += 2 {
+			input.Names = append(input.Names, tv[i])
+			switch input.BaseType {
+			case "int":
+				input.Values = append(input.Values, tv[i+1])
+			default:
+				input.Values = append(input.Values, strconv.Quote(tv[i+1]))
+			}
+		}
+	} else {
+		// 转化为NamedValues
+		for i, s := range input.InputValues {
+			input.Names = append(input.Names, s)
+			switch input.BaseType {
+			case "int":
+				input.Values = append(input.Values, strconv.Itoa(i+1))
+			default:
+				input.Values = append(input.Values, strconv.Quote(s))
+			}
 		}
 	}
 	return nil
