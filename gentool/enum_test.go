@@ -14,7 +14,7 @@ func TestGenerateEnum(t *testing.T) {
 			targetDir:   "testdata/tmp",
 			BaseType:    "int",
 			EnumName:    "intBase",
-			InputValues: []string{"Value1", "Value2", "Value3"},
+			InputValues: []string{"value1", "Value2", "Value3"},
 		}
 		err := GenerateEnum(input)
 		assert.NoError(t, err)
@@ -24,7 +24,7 @@ func TestGenerateEnum(t *testing.T) {
 			targetDir:   "testdata/tmp",
 			BaseType:    "string",
 			EnumName:    "stringBase",
-			InputValues: []string{"Value1", "Value2", "Value3"},
+			InputValues: []string{"value1", "Value2", "Value3"},
 		}
 		err := GenerateEnum(input)
 		assert.NoError(t, err)
@@ -34,7 +34,7 @@ func TestGenerateEnum(t *testing.T) {
 			targetDir:     "testdata/tmp",
 			BaseType:      "string",
 			EnumName:      "namedValues",
-			InputValues:   []string{"Name1", "Value1", "Name2", "Value2", "Name3", "Value3"},
+			InputValues:   []string{"Name1", "value1", "Name2", "Value2", "Name3", "Value3"},
 			IsNamedValues: true,
 		}
 		err := GenerateEnum(input)

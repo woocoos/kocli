@@ -26,7 +26,7 @@ func (e {{ $TypeName }}) String() string {
     switch e {
     {{- range $index, $value := .Names }}
     case {{ $TypeName }}{{ pascal $value }}:
-        return {{ quote $value }}
+        return {{ quote (pascal $value) }}
     {{- end }}
     default:
         return "Unknown"
@@ -57,7 +57,7 @@ func (e *{{ $TypeName }}) UnmarshalGQL(v any) error {
 {{- if eq .BaseType "int" }}
 	switch str {
 {{- range $index, $value := .Names }}
-	case "{{ $value }}":
+	case "{{ pascal $value }}":
 		*e = {{ $TypeName }}{{ pascal $value }}
 {{- end }}
 	default:
