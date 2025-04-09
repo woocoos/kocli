@@ -79,7 +79,6 @@ require (
 )
 
 replace (
-	github.com/woocoos/knockout-go => D:\Code\GitHub\woocoos\knockout-go
 	github.com/woocoos/kocli => ./..
 	google.golang.org/genproto => google.golang.org/genproto v0.0.0-20240722135656-d784300faade
 )

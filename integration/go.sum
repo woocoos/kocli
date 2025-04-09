@@ -167,8 +167,7 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/tsingsun/woocoo v0.5.6 h1:cECutpEwR0VBk7pSNcbYfbDunPgRKpXU5NzSq2iFRQE=
-github.com/tsingsun/woocoo v0.5.6/go.mod h1:tkhnofsWAdguYrpNb6n+10OqxkFWgrmv/PEpQzL/rKQ=
+github.com/tsingsun/woocoo v0.5.7 h1:R+HIn4yyyFRJpQez/YyDLm1gUbGmlf36oK/pP8tgNf8=
 github.com/tsingsun/woocoo v0.5.7/go.mod h1:tkhnofsWAdguYrpNb6n+10OqxkFWgrmv/PEpQzL/rKQ=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
@@ -188,6 +187,8 @@ github.com/woocoos/entcache v0.3.0 h1:UzIy86c7Y4Sd4alomhkP/zdD+nePj6OWa2mvPD5hMh
 github.com/woocoos/entcache v0.3.0/go.mod h1:WGicpJtJzVJETrn/nL8ids3UZquQYLDNm1jpw5Et42M=
 github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47 h1:25S5mtK0s0lIcZFX3o/qMEG+s7Ru89YY+/lGUH837FY=
 github.com/woocoos/knockout v0.0.0-20250310064413-0a92edb21c47/go.mod h1:nbMaL/yO2VOX4p+z1QxaYxgnEVbDoT1tlNiAsRYpsLk=
+github.com/woocoos/knockout-go v0.3.1 h1:/M9LvtX42XfyMn1o4GjGgDZfn3PLTjxSKNQxQw8pxEA=
+github.com/woocoos/knockout-go v0.3.1/go.mod h1:I9BhRCGwIYz1qaJi/KVQ16wBaJ0hN1H5pKBx6tf65fU=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 h1:gEOO8jv9F4OT7lGCjxCBTO/36wtF6j2nSip77qHd4x4=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1/go.mod h1:Ohn+xnUBiLI6FVj/9LpzZWtj1/D6lUovWYBkxHVV3aM=
 github.com/yuin/gopher-lua v1.1.1 h1:kYKnWBjvbNP4XLT3+bPEwAXJx262OhaHDWDVOPjL46M=
