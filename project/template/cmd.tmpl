@@ -49,14 +49,14 @@ web:
       - graphql:
           basePath: "/graphql"
           middlewares:
+            - tenant:
+            - jwt: *jwt
             - graphql:
                 group: "/graphql"
                 withAuthorization: false
                 appCode: {{ pkgName $.Package }}
                 middlewares:
                   operation:
-                    - tenant:
-                    - jwt: *jwt
                     # - tokenSign: # 利用IDE开发时,可注释
                 header: ## dev mode, remove in production, set the value in your .env.local
                   X-Tenant-ID: ${TENANT}
