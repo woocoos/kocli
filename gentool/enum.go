@@ -13,7 +13,7 @@ import (
 
 // EnumInput represents the input for generating an enum.
 type EnumInput struct {
-	targetDir     string
+	TargetDir     string
 	BaseType      string
 	EnumName      string
 	InputValues   []string
@@ -41,7 +41,7 @@ func GenerateEnum(input EnumInput) error {
 			return err
 		}
 		sf := gen.Funcs["snake"].(func(string) string)
-		outputPath := filepath.Join(input.targetDir, fmt.Sprintf("%s.go", sf(input.EnumName)))
+		outputPath := filepath.Join(input.TargetDir, fmt.Sprintf("%s.go", sf(input.EnumName)))
 		if err := os.MkdirAll(filepath.Dir(outputPath), os.ModePerm); err != nil {
 			return err
 		}
@@ -52,9 +52,13 @@ func GenerateEnum(input EnumInput) error {
 	return nil
 }
 
-func enumInput(input *EnumInput) error {
-	if input.targetDir == "" {
-		input.targetDir = filepath.Join("codegen", "entgen", "types")
+func enumInput(input *EnumInput) (err error) {
+	if input.TargetDir == "" {
+		input.TargetDir = filepath.Join("codegen", "entgen", "types")
+	}
+	input.TargetDir, err = filepath.Abs(input.TargetDir)
+	if err != nil {
+		return err
 	}
 	input.Names = make([]string, 0)
 	input.Values = make([]string, 0)

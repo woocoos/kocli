@@ -59,6 +59,7 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
 	github.com/tsingsun/woocoo v0.5.7 // indirect
+	github.com/tsingsun/woocoo/cmd/woco v0.0.0-20240813081525-1724051596c5 // indirect
 	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
