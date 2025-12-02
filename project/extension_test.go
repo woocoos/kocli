@@ -1,11 +1,12 @@
 package project
 
 import (
-	"github.com/stretchr/testify/require"
-	"github.com/tsingsun/woocoo/cmd/woco/project"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"github.com/tsingsun/woocoo/cmd/woco/project"
 )
 
 func Test_Generate(t *testing.T) {
@@ -37,6 +38,7 @@ func Test_Generate(t *testing.T) {
 					)),
 				},
 			},
+			wantErr: true,
 		},
 		{
 			name: "knockout-api-app",
